@@ -3,7 +3,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import select, asc
 
-from .models import User, MemberEvent, EventMembership
+from .models import User, MemberEvent, EventMembership, Initiative
 
 
 class BaseDAO:
@@ -108,3 +108,7 @@ class EventMembershipDAO(BaseDAO):
         result = await db_session.execute(query)
         first_waiting = result.first()
         return first_waiting
+
+
+class InitiativeDAO(BaseDAO):
+    model = Initiative

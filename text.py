@@ -22,11 +22,12 @@ def get_dating_profile_descr(alias, description, username):
 """
 
 
-def get_initiative_text(date, place, comment):
+def get_initiative_text(date, place, comment, activity_type):
     return f"""
 Инициатива
 📍 {place}  
 📅 {date}  
+🏃‍♀️ Тип активности: {activity_type}
 💬 {comment}      
 """
 

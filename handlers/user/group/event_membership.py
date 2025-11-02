@@ -32,7 +32,7 @@ async def user_request_membership(c: types.CallbackQuery, db_session: AsyncSessi
         )
 
     match (event_type):
-        case EventType.INITIATIVE | EventType.MODERATED_INITTIATIVE:
+        case EventType.INITIATIVE:
 
             pass
         case EventType.FRENCH_CLUB | EventType.BUISNESS_MEETS | EventType.WOMEN_MEETS:
@@ -100,7 +100,7 @@ async def user_cancel_membership(c: types.CallbackQuery, db_session: AsyncSessio
         )
 
     match (event_type):
-        case EventType.INITIATIVE | EventType.MODERATED_INITTIATIVE:
+        case EventType.INITIATIVE:
 
             pass
         case EventType.FRENCH_CLUB | EventType.BUISNESS_MEETS | EventType.WOMEN_MEETS:

@@ -39,17 +39,16 @@ class Initiative(Base):
 
     creator: Mapped["User"] = relationship(
         "User",
-        back_populates="initiatives"
+        back_populates="initiatives",
+        lazy="joined"
     )
     creator_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
 
     date_time: Mapped[datetime.datetime] = mapped_column()
     place: Mapped[str] = mapped_column(String(200))
     description: Mapped[str] = mapped_column(String(300))
-
-    # for moderated initiatives
     activity_type: Mapped[str] = mapped_column(String(50), nullable=True)
-    verify: Mapped[bool] = mapped_column(default=False)
+    verified: Mapped[bool] = mapped_column(default=False)
 
 
 class MemberEvent(Base):

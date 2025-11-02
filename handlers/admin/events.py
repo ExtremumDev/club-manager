@@ -19,7 +19,12 @@ from markups.user.events import get_take_part_in_event_markup
 
 from fsm.admin.events_manage import CreateEventFSM
 
-from text import get_buisness_meet_card_text, get_french_club_card_text, get_women_meets_card_text
+from text import (
+    get_buisness_meet_card_text,
+    get_french_club_card_text,
+    get_women_meets_card_text,
+    get_table_game_card_text
+)
 
 from utils.enums import EventType
 from utils.date import validate_date_time
@@ -67,7 +72,24 @@ async def ask_place(m: types.Message, state: FSMContext):
 
 async def ask_description(m: types.Message, state: FSMContext):
     await state.update_data(place=m.text.strip())
+    
+
+    s_data = await state.get_data()
+    if s_data['event_type'] == EventType.TABLE_GAMES:
+        await state.set_state(CreateEventFSM.game_name_state)
+        await m.answer(
+            "Введите название игры"
+        )
+    else:
+        await state.set_state(CreateEventFSM.descr_state)
+        await m.answer(
+            "Придумайте описание для встречи"
+        )
+
+
+async def get_game_name(m: types.Message, state: FSMContext):
     await state.set_state(CreateEventFSM.descr_state)
+    await state.update_data(game_name=m.text.strip())
 
     await m.answer(
         "Придумайте описание для встречи"
@@ -107,31 +129,49 @@ async def create_event(bot, creator_id: int, state_data: dict, db_session: Async
         state_data['place'],
         state_data['descr'],
         state_data['members_limit'],
-        state_data['event_type']
+        state_data['event_type'],
+        state_data.get("game_name", None)
     )
 
     match (state_data['event_type']):
         case (EventType.BUISNESS_MEETS):
             thread_id = chat_settings.BUISNESS_MEETS_THREAD_ID
-            f = get_buisness_meet_card_text
+            message_text = get_french_club_card_text(
+                date_time=state_data['date_time'],
+                place=state_data['place'],
+                description=state_data['descr'],
+                members_left=state_data['members_limit']
+            )
         case (EventType.WOMEN_MEETS):
             thread_id = chat_settings.WOMEN_MEETS_THREAD_ID
-            f = get_women_meets_card_text
+            message_text = get_french_club_card_text(
+                date_time=state_data['date_time'],
+                place=state_data['place'],
+                description=state_data['descr'],
+                members_left=state_data['members_limit']
+            )
         case (EventType.FRENCH_CLUB):
             thread_id = chat_settings.FRENCH_CLUB_THREAD_ID
-            f = get_french_club_card_text
-    
-    # f - func for getting card text(for each event types same func's signatures)
+            message_text = get_french_club_card_text(
+                date_time=state_data['date_time'],
+                place=state_data['place'],
+                description=state_data['descr'],
+                members_left=state_data['members_limit']
+            )
+        case (EventType.TABLE_GAMES):
+            thread_id = chat_settings.TABLE_GAME_THREAD_ID
+            message_text = get_table_game_card_text(
+                date_time=state_data['date_time'],
+                place=state_data['place'],
+                description=state_data['descr'],
+                members_left=state_data['members_limit'],
+                game_name=state_data['game_name']
+            )
 
     await bot.send_message(
         chat_id=chat_settings.GROUP_ID,
         message_thread_id=thread_id,
-        text=f(
-            state_data['date_time'],
-            state_data['place'],
-            state_data['descr'],
-            state_data['members_limit']
-        ),
+        text=message_text,
         reply_markup=get_take_part_in_event_markup(
             new_event.id,
             state_data['event_type']
@@ -140,11 +180,12 @@ async def create_event(bot, creator_id: int, state_data: dict, db_session: Async
 
     await db_session.commit()
 
-    setup_event_notifications(
-        event_date_time=state_data['date_time'],
-        event_id=new_event.id,
-        event_type=state_data['event_type']
-    )
+    if state_data['event_type'] != EventType.TABLE_GAMES:
+        setup_event_notifications(
+            event_date_time=state_data['date_time'],
+            event_id=new_event.id,
+            event_type=state_data['event_type']
+        )
 
     await bot.send_message(
         creator_id,
@@ -157,6 +198,7 @@ def register_create_event_handlers(dp: Dispatcher):
     dp.callback_query.register(ask_date_time, F.data.startswith("createevent_"))
     dp.message.register(ask_place, StateFilter(CreateEventFSM.date_time_state))
     dp.message.register(ask_description, StateFilter(CreateEventFSM.place_state))
+    dp.message.register(get_game_name, StateFilter(CreatEventFSM.game_name_state))
     dp.message.register(get_description, StateFilter(CreateEventFSM.descr_state))
     dp.message.register(
         get_members_limit,

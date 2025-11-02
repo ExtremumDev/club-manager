@@ -17,6 +17,46 @@ from utils.enums import EventType
 
 from text import get_event_name
 
+from text import (
+    get_buisness_meet_card_text,
+    get_french_club_card_text,
+    get_women_meets_card_text,
+    get_table_game_card_text
+)
+
+
+def get_event_card_text(event_type, **kwargs):
+    match (kwargs['event_type']):
+        case (EventType.BUISNESS_MEETS):
+            message_text = get_french_club_card_text(
+                date_time=kwargs['date_time'],
+                place=kwargs['place'],
+                description=kwargs['description'],
+                members_left=kwargs['members_left']
+            )
+        case (EventType.WOMEN_MEETS):
+            message_text = get_french_club_card_text(
+                date_time=kwargs['date_time'],
+                place=kwargs['place'],
+                description=kwargs['descripton'],
+                members_left=kwargs['members_left']
+            )
+        case (EventType.FRENCH_CLUB):
+            message_text = get_french_club_card_text(
+                date_time=kwargs['date_time'],
+                place=kwargs['place'],
+                description=kwargs['description'],
+                members_left=kwargs['members_left']
+            )
+        case (EventType.TABLE_GAMES):
+            message_text = get_table_game_card_text(
+                date_time=['date_time'],
+                place=kwargs['place'],
+                description=kwargs['description'],
+                members_left=kwargs['members_left'],
+                game_name=kwargs['activity_name']
+            )
+
 
 async def notice_user_about_seats_left(original_message: types.Message, members_left: int):
     # Notice user about seats left

@@ -198,7 +198,7 @@ def register_create_event_handlers(dp: Dispatcher):
     dp.callback_query.register(ask_date_time, F.data.startswith("createevent_"))
     dp.message.register(ask_place, StateFilter(CreateEventFSM.date_time_state))
     dp.message.register(ask_description, StateFilter(CreateEventFSM.place_state))
-    dp.message.register(get_game_name, StateFilter(CreatEventFSM.game_name_state))
+    dp.message.register(get_game_name, StateFilter(CreateEventFSM.game_name_state))
     dp.message.register(get_description, StateFilter(CreateEventFSM.descr_state))
     dp.message.register(
         get_members_limit,

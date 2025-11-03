@@ -92,7 +92,8 @@ async def user_request_membership(c: types.CallbackQuery, db_session: AsyncSessi
                         await c.message.edit_text(
                             text=EventType(event.event_type).get_card_text(
                                 **event.model_to_dict()
-                            )
+                            ),
+                            reply_markup=c.message.reply_markup
                         )
                         await c.answer(
                             text,
@@ -181,7 +182,8 @@ async def user_cancel_membership(c: types.CallbackQuery, db_session: AsyncSessio
                         await c.message.edit_text(
                             text=EventType(event.event_type).get_card_text(
                                 **event.model_to_dict()
-                            )
+                            ),
+                            reply_markup=c.message.reply_markup
                         )
                         await c.answer(
                             alert_message,

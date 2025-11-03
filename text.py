@@ -46,7 +46,7 @@ def get_women_meets_card_text(date_time, place, description, members_left, **kwa
     return f"""
 ☕️ Женская психологическая встреча
 📍 {place}
-📅 {dadate_timete.strftime("%d-%m-%Y %H:%M")}  
+📅 {date_timete.strftime("%d-%m-%Y %H:%M")}  
 👥 Мест осталось: {members_left}  
 💬 {description}
 """

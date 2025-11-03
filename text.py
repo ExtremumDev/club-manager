@@ -36,7 +36,7 @@ def get_french_club_card_text(date_time, place, description, members_left):
     return f"""
 💼  Мастермайнд
 📍 {place}
-📅 {date.strftime("%d-%m-%Y %H:%M")}  
+📅 {date_time.strftime("%d-%m-%Y %H:%M")}  
 👥 Мест осталось: {members_left}  
 💬 {description}
 """
@@ -46,7 +46,7 @@ def get_women_meets_card_text(date_time, place, description, members_left):
     return f"""
 ☕️ Женская психологическая встреча
 📍 {place}
-📅 {date.strftime("%d-%m-%Y %H:%M")}  
+📅 {dadate_timete.strftime("%d-%m-%Y %H:%M")}  
 👥 Мест осталось: {members_left}  
 💬 {description}
 """
@@ -55,7 +55,7 @@ def get_buisness_meet_card_text(date_time, place, description, members_left):
     return f"""
 🇫🇷 Разговорный клуб  
 📍 {place}
-📅 {date.strftime("%d-%m-%Y %H:%M")}  
+📅 {date_time.strftime("%d-%m-%Y %H:%M")}  
 👥 Мест осталось: {members_left}
 💬 {description}
 """

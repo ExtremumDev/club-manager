@@ -136,7 +136,7 @@ async def create_event(bot, creator_id: int, state_data: dict, db_session: Async
     match (state_data['event_type']):
         case (EventType.BUISNESS_MEETS):
             thread_id = chat_settings.BUISNESS_MEETS_THREAD_ID
-            message_text = get_french_club_card_text(
+            message_text = get_buisness_meet_card_text(
                 date_time=state_data['date_time'],
                 place=state_data['place'],
                 description=state_data['descr'],
@@ -144,7 +144,7 @@ async def create_event(bot, creator_id: int, state_data: dict, db_session: Async
             )
         case (EventType.WOMEN_MEETS):
             thread_id = chat_settings.WOMEN_MEETS_THREAD_ID
-            message_text = get_french_club_card_text(
+            message_text = get_women_meets_card_text(
                 date_time=state_data['date_time'],
                 place=state_data['place'],
                 description=state_data['descr'],

@@ -32,7 +32,7 @@ def get_initiative_text(date, place, comment, activity_type):
 """
 
 
-def get_french_club_card_text(date_time, place, description, members_left):
+def get_french_club_card_text(date_time, place, description, members_left, **kwargs):
     return f"""
 🇫🇷 Разговорный клуб
 📍 {place}
@@ -42,7 +42,7 @@ def get_french_club_card_text(date_time, place, description, members_left):
 """
 
 
-def get_women_meets_card_text(date_time, place, description, members_left):
+def get_women_meets_card_text(date_time, place, description, members_left, **kwargs):
     return f"""
 ☕️ Женская психологическая встреча
 📍 {place}
@@ -51,7 +51,7 @@ def get_women_meets_card_text(date_time, place, description, members_left):
 💬 {description}
 """
 
-def get_buisness_meet_card_text(date_time, place, description, members_left):
+def get_buisness_meet_card_text(date_time, place, description, members_left, **kwargs):
     return f"""
 🇫🇷 Разговорный клуб  
 📍 {place}
@@ -61,7 +61,7 @@ def get_buisness_meet_card_text(date_time, place, description, members_left):
 """
 
 
-def get_table_game_card_text(activity_name, date_time, place, description, members_left):
+def get_table_game_card_text(activity_name, date_time, place, description, members_left, **kwargs):
     return f"""
 🎲 {activity_name}
 📍 {place}

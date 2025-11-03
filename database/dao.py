@@ -57,7 +57,7 @@ class UserDAO(BaseDAO):
             session,
             telegram_id=telegram_id,
             telegram_username=username,
-            is_private=has_bot_chat
+            has_private=has_bot_chat
         )
 
     @classmethod

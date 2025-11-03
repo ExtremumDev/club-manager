@@ -100,6 +100,6 @@ class EventMembership(Base):
     event_id: Mapped[int] = mapped_column(ForeignKey("member_events.id"))
 
     created_ad: Mapped[datetime.datetime] = mapped_column(server_default=func.now())
-    is_memeber: Mapped[bool] = mapped_column(default=True)
+    is_member: Mapped[bool] = mapped_column(default=True)
     is_come: Mapped[bool] = mapped_column(default=False)
 

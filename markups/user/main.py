@@ -27,3 +27,10 @@ main_user_markup = InlineKeyboardMarkup(
         ]
     ]
 )
+
+
+account_manage_markup = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(text="Мои мероприятия", callback_data="my_events")]
+    ]
+)

@@ -7,7 +7,7 @@ from database.dao import UserDAO
 from database.utils import connection
 
 from filters.user_filters import AdminFilter
-from markups.admin.main import main_admin_markup
+from markups.admin.main import main_admin_markup, main_markup_for_admin
 
 
 @connection
@@ -29,7 +29,23 @@ async def start_cmd(m: types.Message, state: FSMContext, db_session):
 
     await m.answer(
         text="Добро пожаловать!",
+        reply_markup=main_markup_for_admin
+    )
+
+
+async def open_admin_panel(c: types.CallbackQuery):
+    await c.answer()
+    await c.message.answer(
+        "Открыта панель администратора",
         reply_markup=main_admin_markup
+    )
+
+
+async def back_to_menu(c: types.CallbackQuery):
+    await c.answer()
+    await c.message.answer(
+        "Открыто главное меню",
+        reply_markup=main_markup_for_admin
     )
 
 
@@ -40,5 +56,15 @@ def register_start_handlers(dp: Dispatcher) -> None:
         AdminFilter(),
         F.chat.type == ChatType.PRIVATE,
         StateFilter('*')
+    )
+    dp.callback_query.register(
+        open_admin_panel,
+        F.data == "admin_panel",
+        AdminFilter()
+    )
+    dp.callback_query.register(
+        back_to_menu,
+        F.data == "back_to_menu",
+        AdminFilter()
     )
 

@@ -63,7 +63,7 @@ async def send_event_info(c: types.CallbackQuery, db_session, *args):
                         message_text += f"\n{i}) @{member.user.telegram_username}"
                     else:
                         message_text += f"\n{i}) {member.name}"
-            i += 1
+                i += 1
         else:
             message_text += "\n\n К данному мероприятию пока никто не присоединился"
 

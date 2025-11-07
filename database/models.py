@@ -10,7 +10,6 @@ import datetime
 
 from utils.enums import EventType
 
-
 class Base(AsyncAttrs, DeclarativeBase):
     __abstract__ = True
     

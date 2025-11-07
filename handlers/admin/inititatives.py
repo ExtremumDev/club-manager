@@ -17,7 +17,7 @@ from text import get_initiative_text
 
 
 @connection
-async def verify_initiative(c: types.CallbackQuery, db_session):
+async def verify_initiative(c: types.CallbackQuery, db_session, *args):
     a, init_id, verif = c.data.split('_')
     await c.answer()
 

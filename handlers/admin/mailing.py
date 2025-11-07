@@ -66,7 +66,7 @@ async def confirm_mailing(m: types.Message, state: FSMContext):
 
 
 @connection
-async def get_confirmation(c: types.CallbackQuery, state: FSMContext, db_session):
+async def get_confirmation(c: types.CallbackQuery, state: FSMContext, db_session, *args):
     confirm = c.data.split('_')[1]
 
     await c.answer()

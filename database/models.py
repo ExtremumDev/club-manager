@@ -91,7 +91,7 @@ class EventMembership(Base):
         "User",
         back_populates="memberships"
     )
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
 
     event: Mapped["MemberEvent"] = relationship(
         "MemberEvent",
@@ -102,4 +102,6 @@ class EventMembership(Base):
     created_ad: Mapped[datetime.datetime] = mapped_column(server_default=func.now())
     is_member: Mapped[bool] = mapped_column(default=True)
     is_come: Mapped[bool] = mapped_column(default=False)
+    name: Mapped[str] = mapped_column(nullable=True)
+    is_bot_user: Mapped[bool] = mapped_column(default=True)
 

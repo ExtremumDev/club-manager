@@ -74,7 +74,7 @@ def setup_event_notifications(
     )
 
 @connection
-async def send_event_notification(event_id: int, message: str, db_session):
+async def send_event_notification(event_id: int, message: str, db_session, *args):
     event = await MembersEventDAO.get_event_with_members(db_session, event_id)
 
     for u in event.members:

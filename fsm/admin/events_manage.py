@@ -7,3 +7,7 @@ class CreateEventFSM(StatesGroup):
     descr_state = State()
     members_limit_state = State()
     game_name_state = State()
+
+
+class NewEventMemberFSM(StatesGroup):
+    member_name_state = State()

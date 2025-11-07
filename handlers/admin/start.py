@@ -11,7 +11,7 @@ from markups.admin.main import main_admin_markup, main_markup_for_admin
 
 
 @connection
-async def start_cmd(m: types.Message, state: FSMContext, db_session):
+async def start_cmd(m: types.Message, state: FSMContext, db_session, *args):
     await state.clear()
 
     user = await UserDAO.get_obj(

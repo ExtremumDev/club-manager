@@ -64,7 +64,7 @@ async def ask_comment(m: types.Message, state: FSMContext):
 
 
 @connection
-async def create_initiative(m: types.Message, state: FSMContext, db_session):
+async def create_initiative(m: types.Message, state: FSMContext, db_session, *args):
     s_data = await state.get_data()
     await state.clear()
 

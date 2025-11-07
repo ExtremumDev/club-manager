@@ -14,7 +14,7 @@ from database.utils import connection
 
 from filters.user_filters import AdminFilter
 
-from markups.admin.event_manage import event_type_markup
+from markups.admin.event_manage import get_event_type_markup
 from markups.user.events import get_take_part_in_event_markup
 
 from fsm.admin.events_manage import CreateEventFSM
@@ -37,7 +37,7 @@ from config import chat_settings
 async def ask_event_type(c: types.CallbackQuery):
     await c.message.answer(
         "Выберите, событие, которое хотите зарегистрировать",
-        reply_markup=event_type_markup
+        reply_markup=get_event_type_markup()
     )
     await c.answer()
 
@@ -195,7 +195,7 @@ async def create_event(bot, creator_id: int, state_data: dict, db_session: Async
 
 def register_create_event_handlers(dp: Dispatcher):
     dp.callback_query.register(ask_event_type, F.data == "add_event")
-    dp.callback_query.register(ask_date_time, F.data.startswith("createevent_"))
+    dp.callback_query.register(ask_date_time, F.data.startswith("eventtype_"))
     dp.message.register(ask_place, StateFilter(CreateEventFSM.date_time_state))
     dp.message.register(ask_description, StateFilter(CreateEventFSM.place_state))
     dp.message.register(get_game_name, StateFilter(CreateEventFSM.game_name_state))

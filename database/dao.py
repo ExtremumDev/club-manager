@@ -121,6 +121,12 @@ class MembersEventDAO(BaseDAO):
         event = res.scalar_one_or_none()
         return event
 
+    @classmethod
+    async def get_all_events_by_type(cls, db_session: AsyncSession, event_type):
+        query = select(MemberEvent).filter_by(event_type=event_type)
+        res = await db_session.execute()
+        return await res.scalars().all()
+
 
 
 class EventMembershipDAO(BaseDAO):

@@ -137,11 +137,11 @@ class MembersEventDAO(BaseDAO):
             .where(User.telegram_id == user_id)
         )
     
-        result = await db_session.execute(stmt)
+        result = await db_session.execute(query)
         user = result.scalar_one_or_none()
         
         if user:
-            events = [memebership.event for memebership in user.memberships]
+            events = [membership.event for membership in user.memberships]
             return users
         return []
 

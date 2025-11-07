@@ -1,0 +1,14 @@
+[Unit]
+Description=Telegram bot
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/root/club_manager/
+ExecStart=source venv/bin/activate && python3 main.py
+Restart=on-failure
+RestartSec=10s
+User=root
+
+[Install]
+WantedBy=multi-user.target

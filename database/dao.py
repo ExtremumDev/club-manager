@@ -109,13 +109,7 @@ class MembersEventDAO(BaseDAO):
 
     @classmethod
     async def get_event_with_members(cls, db_session: AsyncSession, event_id: int):
-        query = select(MemberEvent).options(
-            joinedload(
-                MemberEvent.members
-            ).joinedload(
-                EventMembership.user
-            )
-        ).where(MemberEvent.id==event_id)
+        query = select(MemberEvent).filter_by(id=event_id)
 
         res = await db_session.execute(query)
         event = res.scalar_one_or_none()

@@ -52,7 +52,7 @@ async def send_event_info(c: types.CallbackQuery, db_session, *args):
     event = await MembersEventDAO.get_event_with_members(db_session, int(event_id))
 
     if event:
-        message_text = event.event_type.get_card_text(**event.model_to_dict)
+        message_text = event.event_type.get_card_text(**event.model_to_dict())
 
         if event.members:
             i = 1

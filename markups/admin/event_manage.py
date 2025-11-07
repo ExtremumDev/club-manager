@@ -63,6 +63,12 @@ def get_event_manage_markup(event_id):
             [InlineKeyboardButton(
                 text="Добавить участника",
                 callback_data=f"addmember_{event_id}"
-            )]
+            )],
+            [
+                InlineKeyboardButton(
+                    text="Удалить мероприятие",
+                    callback_data=f"deleteevent_{event_id}"
+                )
+            ]
         ]
     )

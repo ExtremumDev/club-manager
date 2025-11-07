@@ -58,7 +58,10 @@ async def send_event_info(c: types.CallbackQuery, db_session, *args):
             i = 1
             for member in evet.members:
                 if member.is_member:
-                    message_text += f"\n{i}) @{member.user.username}"
+                    if member.is_bot_user:
+                        message_text += f"\n{i}) @{member.user.username}"
+                    else:
+                        message_text += f"\n{i}) {member.name}"
         else:
             message_text += "\n\n К данному мероприятию пока никто не присоединился"
 

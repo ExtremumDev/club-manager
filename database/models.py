@@ -81,7 +81,9 @@ class MemberEvent(Base):
 
     members: Mapped[List["EventMembership"]] = relationship(
         "EventMembership",
-        back_populates="event"
+        back_populates="event",
+        cascade="all, delete-orphan",  # ← ключевой параметр
+        passive_deletes=True
     )
 
 
@@ -97,7 +99,7 @@ class EventMembership(Base):
         "MemberEvent",
         back_populates="members"
     )
-    event_id: Mapped[int] = mapped_column(ForeignKey("member_events.id"))
+    event_id: Mapped[int] = mapped_column(ForeignKey("member_events.id", ondelete="CASCADE"))
 
     created_ad: Mapped[datetime.datetime] = mapped_column(server_default=func.now())
     is_member: Mapped[bool] = mapped_column(default=True)

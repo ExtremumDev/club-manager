@@ -41,6 +41,7 @@ async def send_event_list(c: types.CallbackQuery, db_session, *args):
         "Выберите мероприятие, которое хотите посмотреть",
         reply_markup=paging.get_reply_markup()
     )
+    await c.answer()
 
 
 @connection

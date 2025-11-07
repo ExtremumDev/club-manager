@@ -32,9 +32,9 @@ async def ask_event_type(c: types.CallbackQuery):
 async def send_event_list(c: types.CallbackQuery, db_session, *args):
     event_type = c.data.split('_')[1]
     
-    paging = EventsPaging()
+    paging = EventsPaging(EventType(int(event_type)))
 
-    await paging.get_queryset(db_session, event_type=EventType(int(event_type)))
+    await paging.get_queryset(db_session)
     await paging.get_current_page()
 
     await c.message.answer(

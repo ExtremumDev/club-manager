@@ -40,7 +40,7 @@ def get_event_type_markup(prefix: str = ''):
     )
 
 
-def get_events_list_markup(events: list):
+def get_events_list_markup(events: list, prefix: str = ''):
     inline_keyboard = []
 
     for e in events:
@@ -48,7 +48,7 @@ def get_events_list_markup(events: list):
             [
                 InlineKeyboardButton(
                     text=str(e.date_time),
-                    callback_data=f"eventm_{e.id}"
+                    callback_data=f"{prefix}eventm_{e.id}"
                 )
             ]
         )

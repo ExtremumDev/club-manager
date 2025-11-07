@@ -120,8 +120,33 @@ class MembersEventDAO(BaseDAO):
     @classmethod
     async def get_all_events_by_type(cls, db_session: AsyncSession, event_type):
         query = select(MemberEvent).filter_by(event_type=event_type)
+
         res = await db_session.execute(query)
         return res.scalars().all()
+
+
+    @classmethod
+    async def get_all_events_by_type_and_user(
+        cls, db_session: AsyncSession, event_type, user_id
+    ):
+        query = (
+            select(User)
+            .options(
+                selectinload(User.memberships).selectinload(EventMembership.event)
+            )
+            .where(User.user_id == user_id)
+        )
+    
+        result = await session.execute(stmt)
+        user = result.scalar_one_or_none()
+        
+        if user:
+            events = [memebership.event for memebership in user.memberships]
+            return users
+        return []
+
+
+    
 
 
 

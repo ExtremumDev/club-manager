@@ -14,16 +14,18 @@ from database.utils import connection
 
 
 class EventsPaging(Paging):
+    EMPTY_SET_MESSAGE = "Не найдено мероприятий"
 
-    def __init__(self, page: int = 0):
+    def __init__(self, event_type: EventType, page: int = 0):
         super().__init__(page, "events")
+        self.event_type = event_type
 
     async def get_queryset(
-        self, db_session: AsyncSession, event_type: EventType, *args, **kwargs
+        self, db_session: AsyncSession, *args, **kwargs
     ):
         self.queryset = await MembersEventDAO.get_all_events_by_type(
             db_session=db_session,
-            event_type=event_type
+            event_type=self.event_type
         )
 
 
@@ -35,9 +37,10 @@ class EventsPaging(Paging):
     ):
         return super().get_reply_markup(
             reply_markup=get_events_list_markup(
-                events=self.queryset
+                events=self.queryset,
+                prefix=self.prefix
             ),
-            extra_data=extra_data
+            extra_data=f"_{self.event_type.value}"
         )
 
 
@@ -48,14 +51,12 @@ class EventsPaging(Paging):
     ):
         a, page, event_type = c.data.split('_')
 
-        paging = cls(int(page))
-        await paging.get_queryset(db_session, event_type)
+        paging = cls(event_type=EventType(int(event_type)), page=int(page))
+        await paging.get_queryset(db_session)
         await paging.create_next_page()
 
         await c.message.edit_reply_markup(
-            reply_markup=paging.get_reply_markup(
-                extra_data=f"_{event_type}"
-            )
+            reply_markup=paging.get_reply_markup()
         )
 
         await c.answer()
@@ -65,19 +66,17 @@ class EventsPaging(Paging):
     async def prev_page_handler(cls, c: types.CallbackQuery, db_session, *args):
         a, page, event_type = c.data.split('_')
 
-        paging = cls(int(page))
-        await paging.get_queryset(db_session, event_type)
+        paging = cls(event_type=EventType(int(event_type)), page=int(page))
+        await paging.get_queryset(db_session)
         await paging.create_prev_page()
 
         await c.message.edit_reply_markup(
-            reply_markup=paging.get_reply_markup(
-                extra_data=f"_{event_type}"
-            )
+            reply_markup=paging.get_reply_markup()
         )
 
         await c.answer()
 
 
     @classmethod
-    def register_paging_handlers(cls, dp):
-        super().register_paging_handlers(dp, prefix="events")
+    def register_paging_handlers(cls, dp, prefix=''):
+        super().register_paging_handlers(dp, prefix=prefix + "events")

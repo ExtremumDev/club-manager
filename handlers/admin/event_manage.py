@@ -146,4 +146,4 @@ def register_event_manage_handlers(dp: Dispatcher):
     dp.callback_query.register(send_event_info, F.data.startswith("eventm_"))
     dp.callback_query.register(ask_member_name, F.data.startswith("addmember_"))
     dp.message.register(add_new_member, StateFilter(NewEventMemberFSM.member_name_state))
-    dp.callback_query.register(delete_member, F.data.startswith("deleteevent_"))
+    dp.callback_query.register(delete_event, F.data.startswith("deleteevent_"))

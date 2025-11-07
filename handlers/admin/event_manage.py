@@ -79,7 +79,7 @@ async def send_event_info(c: types.CallbackQuery, db_session, *args):
 
 @connection
 async def ask_member_name(c: types.CallbackQuery, state: FSMContext, db_session, *args):
-    event_id = c.data.split('_')
+    event_id = int(c.data.split('_')[1])
 
     event = await MembersEventDAO.get_obj(db_session, id=event_id)
 
@@ -125,7 +125,7 @@ async def add_new_member(m: types.Message, state: FSMContext, db_session, *args)
 
 @connection
 async def delete_event(c: types.CallbackQuery, db_session, *args):
-    event_id = c.data.split('_')[1]
+    event_id = int(c.data.split('_')[1])
 
     event = await MembersEventDAO.get_obj(db_session, id=event_id)
 

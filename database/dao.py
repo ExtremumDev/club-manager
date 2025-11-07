@@ -115,7 +115,7 @@ class MembersEventDAO(BaseDAO):
             ).joinedload(
                 EventMembership.user
             )
-        ).filter_by(MemberEvent.id=event_id)
+        ).where(MemberEvent.id==event_id)
 
         res = await db_session.execute(query)
         event = res.scalar_one_or_none()

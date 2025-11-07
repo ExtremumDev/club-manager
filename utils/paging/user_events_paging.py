@@ -75,5 +75,5 @@ class UserEventsPaging(EventsPaging):
         await c.answer()
 
     @classmethod
-    def register_paging_handlers(dp):
+    def register_paging_handlers(cls, dp):
         super().register_paging_handlers(dp, prefix='u')

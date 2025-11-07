@@ -13,7 +13,7 @@ class UserEventsPaging(EventsPaging):
         super().__init__(event_type, page)
         self.prefix = 'u'
 
-    def get_queryset(
+    async def get_queryset(
         self, db_session: AsyncSession, user_id,
         *args, **kwargs
     ):

@@ -1,5 +1,8 @@
 from aiogram import types
 
+
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from .base_paging import Paging
 
 from utils.enums import EventType

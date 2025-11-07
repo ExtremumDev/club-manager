@@ -142,7 +142,7 @@ class MembersEventDAO(BaseDAO):
         
         if user:
             events = [membership.event for membership in user.memberships]
-            return users
+            return events
         return []
 
 

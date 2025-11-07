@@ -47,7 +47,7 @@ def get_events_list_markup(events: list):
         inline_keyboard.append(
             [
                 InlineKeyboardButton(
-                    text=e.date_time,
+                    text=str(e.date_time),
                     callback_data=f"eventm_{e.id}"
                 )
             ]

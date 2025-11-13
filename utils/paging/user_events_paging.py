@@ -76,4 +76,4 @@ class UserEventsPaging(EventsPaging):
 
     @classmethod
     def register_paging_handlers(cls, dp):
-        super().register_paging_handlers(dp, prefix='u')
+        super().register_paging_handlers(dp, data_prefix='u')

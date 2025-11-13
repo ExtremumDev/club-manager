@@ -1,3 +1,5 @@
+from sys import prefix
+
 from aiogram import types
 
 
@@ -16,9 +18,10 @@ from database.utils import connection
 class EventsPaging(Paging):
     EMPTY_SET_MESSAGE = "Не найдено мероприятий"
 
-    def __init__(self, event_type: EventType, page: int = 0):
+    def __init__(self, event_type: EventType, page: int = 0, prefix: str = ''):
         super().__init__(page)
         self.event_type = event_type
+        self.prefix = prefix
 
     async def get_queryset(
         self, db_session: AsyncSession, *args, **kwargs
@@ -51,7 +54,12 @@ class EventsPaging(Paging):
     ):
         a, page, event_type = c.data.split('_')
 
-        paging = cls(event_type=EventType(int(event_type)), page=int(page))
+        if c.data.startswith("af"):
+            paging_prefix = "af"
+        else:
+            paging_prefix = ""
+
+        paging = cls(event_type=EventType(int(event_type)), page=int(page), prefix=paging_prefix)
         await paging.get_queryset(db_session)
         await paging.create_next_page()
 
@@ -66,7 +74,12 @@ class EventsPaging(Paging):
     async def prev_page_handler(cls, c: types.CallbackQuery, db_session, *args):
         a, page, event_type = c.data.split('_')
 
-        paging = cls(event_type=EventType(int(event_type)), page=int(page))
+        if c.data.startswith("af"):
+            paging_prefix = "af"
+        else:
+            paging_prefix = ""
+
+        paging = cls(event_type=EventType(int(event_type)), page=int(page), prefix=paging_prefix)
         await paging.get_queryset(db_session)
         await paging.create_prev_page()
 
@@ -78,5 +91,5 @@ class EventsPaging(Paging):
 
 
     @classmethod
-    def register_paging_handlers(cls, dp, prefix=''):
-        super().register_paging_handlers(dp, prefix=prefix + "events")
+    def register_paging_handlers(cls, dp, data_prefix=''):
+        super().register_paging_handlers(dp, prefix=data_prefix + "events")

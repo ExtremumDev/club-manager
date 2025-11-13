@@ -1,5 +1,6 @@
 from aiogram import types, Dispatcher, F
-from aiogram.exceptions import TelegramForbiddenError
+from aiogram.exceptions import TelegramBadRequest
+from aiogram.enums import ChatType
 
 
 from datetime import datetime
@@ -7,7 +8,7 @@ from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-
+from config import settings, chat_settings
 from filters.chat_filters import GroupFilter
 
 from database.dao import MembersEventDAO, EventMembershipDAO, UserDAO
@@ -89,12 +90,22 @@ async def user_request_membership(c: types.CallbackQuery, db_session: AsyncSessi
                             event_id=event.id,
                             is_member=is_member_of_event
                         )
+
+                        new_message_text = EventType(event.event_type).get_card_text(
+                            **event.model_to_dict()
+                        )
+
                         await c.message.edit_text(
-                            text=EventType(event.event_type).get_card_text(
-                                **event.model_to_dict()
-                            ),
+                            text=new_message_text,
                             reply_markup=c.message.reply_markup
                         )
+
+                        if c.message.chat.type == ChatType.PRIVATE:
+                            await c.bot.edit_message_text(
+                                text=new_message_text,
+                                chat_id=chat_settings.GROUP_ID,
+                                message_id=event.info_message_id
+                            )
                         await c.answer(
                             text,
                             show_alert=True
@@ -154,15 +165,15 @@ async def user_cancel_membership(c: types.CallbackQuery, db_session: AsyncSessio
                             )
 
                             if last_in_waiting:
-                                last_in_waiting.is_memeber = True
+                                last_in_waiting.is_member = True
 
                                 try:
                                     await c.bot.send_message(
                                         chat_id=last_in_waiting.user.telegram_id,
                                         text=f"""
-Вы теперь являетесь участником мероприятия {EventType(event.event_type).get_event_name()} {last_in_waiting.event.date_time.str}"""
+Вы теперь являетесь участником мероприятия {EventType(event.event_type).get_event_name()} {last_in_waiting.event.date_time.strftime("%d-%m-%Y %H:%M")}"""
                                     )
-                                except TelegramForbiddenError:
+                                except TelegramBadRequest:
                                     pass
                             else:
                                 event.members_left += 1
@@ -179,19 +190,29 @@ async def user_cancel_membership(c: types.CallbackQuery, db_session: AsyncSessio
                                 await UserDAO.change_user_rating(db_session, c.from_user.id, -1)
                                 alert_message = "Ты решил отменить участие менее чем за сутки? 😬 Минус 1 балл!"
 
+                        new_message_text = EventType(event.event_type).get_card_text(
+                            **event.model_to_dict()
+                        )
+
                         await c.message.edit_text(
-                            text=EventType(event.event_type).get_card_text(
-                                **event.model_to_dict()
-                            ),
+                            text=new_message_text,
                             reply_markup=c.message.reply_markup
                         )
+
+                        if c.message.chat.type == ChatType.PRIVATE:
+                            await c.bot.edit_message_text(
+                                text=new_message_text,
+                                chat_id=chat_settings.GROUP_ID,
+                                message_id=event.info_message_id,
+                                reply_markup=c.message.reply_markup
+                            )
                         await c.answer(
                             alert_message,
                             show_alert=True
                         )
 
                         if event_type == EventType.TABLE_GAMES:
-                            notice_user_about_seats_left(c.message, event.members_left)
+                            await notice_user_about_seats_left(c.message, event.members_left)
 
                     else:
                         await c.answer(

@@ -153,7 +153,7 @@ async def create_event(bot, creator_id: int, state_data: dict, db_session: Async
         case (EventType.TABLE_GAMES):
             thread_id = chat_settings.TABLE_GAME_THREAD_ID
 
-    await bot.send_message(
+    message = await bot.send_message(
         chat_id=chat_settings.GROUP_ID,
         message_thread_id=thread_id,
         text=message_text,
@@ -162,6 +162,8 @@ async def create_event(bot, creator_id: int, state_data: dict, db_session: Async
             state_data['event_type'].value
         )
     )
+
+    new_event.info_message_id = message.message_id
 
     await db_session.commit()
 

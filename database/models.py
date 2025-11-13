@@ -8,7 +8,8 @@ from typing import List
 
 import datetime
 
-from utils.enums import EventType
+from utils.enums import EventType, Sex
+
 
 class Base(AsyncAttrs, DeclarativeBase):
     __abstract__ = True
@@ -38,15 +39,13 @@ class User(Base):
     telegram_id: Mapped[int] = mapped_column(BigInteger, unique=True)
     telegram_username: Mapped[str] = mapped_column(String(32))
 
-    name: Mapped[str] = mapped_column(String(100), server_default="Не указано")
-    alias: Mapped[str] = mapped_column(String(100), server_default="Анонимный пользователь")
-
     register_date: Mapped[datetime.datetime] = mapped_column(server_default=func.now())
     
     has_private: Mapped[bool] = mapped_column()
     is_admin: Mapped[bool] = mapped_column(default=False)
 
-    rating: Mapped[int] = mapped_column(default=0)
+    profile: Mapped["UserProfile"] = relationship("UserProfile", back_populates="user")
+    profile_id: Mapped[int] = mapped_column(ForeignKey("user_profiles.id"))
 
     memberships: Mapped[List["EventMembership"]] = relationship(
         "EventMembership",
@@ -57,6 +56,23 @@ class User(Base):
         "Initiative",
         back_populates="creator"
     )
+
+
+class UserProfile(Base):
+    user: Mapped["User"] = relationship(
+        "User",
+        back_populates="profile"
+    )
+
+    name: Mapped[str] = mapped_column(String(100), server_default="Не указано")
+    alias: Mapped[str] = mapped_column(String(100), server_default="Анонимный пользователь")
+    city: Mapped[str] = mapped_column(String(20))
+    birthday: Mapped[datetime.datetime] = mapped_column()
+    interests: Mapped[str] = mapped_column(String(150))
+    sex: Mapped[Sex] = mapped_column(nullable=True)
+    social_link: Mapped[str] = mapped_column(String(100), nullable=True)
+
+    rating: Mapped[int] = mapped_column(default=0)
 
 
 class Initiative(Base):
@@ -85,6 +101,8 @@ class MemberEvent(Base):
     event_type: Mapped[EventType] = mapped_column()
     holder: Mapped[str] = mapped_column(String(100), server_default="Не указан")
 
+    info_message_id: Mapped[int] = mapped_column(BigInteger, server_default="0")
+
     members: Mapped[List["EventMembership"]] = relationship(
         "EventMembership",
         back_populates="event",
@@ -112,4 +130,8 @@ class EventMembership(Base):
     is_come: Mapped[bool] = mapped_column(default=False)
     name: Mapped[str] = mapped_column(nullable=True)
     is_bot_user: Mapped[bool] = mapped_column(default=True)
+
+
+class DatingProfiles(Base):
+
 

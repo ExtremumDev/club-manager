@@ -16,8 +16,8 @@ from bot import bot
 from scheduler.scheduler import scheduler
 
 from text import (
-    two_hours_before_text_buisness, two_hours_before_text_french, two_hours_before_text_women,
-    day_before_text_buisness, day_before_text_french, day_before_text_women
+    two_hours_before_text_business, two_hours_before_text_french, two_hours_before_text_women,
+    day_before_text_business, day_before_text_french, day_before_text_women
 )
 
 
@@ -35,8 +35,8 @@ def setup_event_notifications(
             day_before_text = day_before_text_women
             two_hours_before_text = two_hours_before_text_women
         case (EventType.BUISNESS_MEETS):
-            day_before_text = day_before_text_buisness
-            two_hours_before_text = two_hours_before_text_buisness
+            day_before_text = day_before_text_business
+            two_hours_before_text = two_hours_before_text_business
 
     day_before_datetime = event_date_time - datetime.timedelta(days=1)
     two_hours_before = event_date_time - datetime.timedelta(hours=2)

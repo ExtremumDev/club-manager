@@ -40,3 +40,8 @@ class EventType(Enum):
                 return "☕️ Женские психологические встречи"
             case (EventType.TABLE_GAMES):
                 return "🎲 Настольные игры"
+
+
+class Sex(Enum):
+    MALE = 0
+    FEMALE = 1

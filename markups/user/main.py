@@ -1,36 +1,40 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
+from markups.user.account import registration_skip_step_markup, sex_choice_markup
 
 main_user_markup = InlineKeyboardMarkup(
     inline_keyboard=[
         [
             InlineKeyboardButton(
-                text="👤 Личный кабинет",
+                text="👤 Мой профиль",
                 callback_data="lk"
             )
         ],
-        [InlineKeyboardButton(
-            text="Создать инициативу",
-            callback_data="create_initiative"
-        )],
+        [
+            InlineKeyboardButton(
+                text="💡 Создать инициативу",
+                callback_data="create_initiative"
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="💌 Знакомства и общение",
+                callback_data="dating"
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="☕️ Рандеву-кофе",
+                callback_data="randevu_coffee"
+            )
+        ],
         [
             InlineKeyboardButton(
                 text="Предложить активность",
                 callback_data="suggest_activity"
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text="Создать анкету для знакомств",
-                callback_data="create_dating_profile"
             )
         ]
     ]
 )
 
 
-account_manage_markup = InlineKeyboardMarkup(
-    inline_keyboard=[
-        [InlineKeyboardButton(text="Мои мероприятия", callback_data="my_events")]
-    ]
-)

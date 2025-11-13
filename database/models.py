@@ -45,7 +45,7 @@ class User(Base):
     is_admin: Mapped[bool] = mapped_column(default=False)
 
     profile: Mapped["UserProfile"] = relationship("UserProfile", back_populates="user")
-    profile_id: Mapped[int] = mapped_column(ForeignKey("user_profiles.id"))
+    profile_id: Mapped[int] = mapped_column(ForeignKey("user_profiles.id"), nullable=True)
 
     memberships: Mapped[List["EventMembership"]] = relationship(
         "EventMembership",
@@ -63,7 +63,6 @@ class UserProfile(Base):
         "User",
         back_populates="profile"
     )
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
 
     name: Mapped[str] = mapped_column(String(100), server_default="Не указано")
     alias: Mapped[str] = mapped_column(String(100), server_default="Анонимный пользователь")

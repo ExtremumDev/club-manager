@@ -1,4 +1,4 @@
-from typing import List, Any, Dict
+from typing import List, Any, Dict, Sequence
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import select, asc, update
@@ -188,4 +188,11 @@ class UserProfileDAO(BaseDAO):
 class DatingProfileDAO(BaseDAO):
     model = DatingProfile
 
-    def
+    @classmethod
+    async def get_profiles_for_user(cls, db_session: AsyncSession, user_id: int):
+        query = select(DatingProfile).options(
+            selectinload(DatingProfile.user)
+        ).where(User.telegram_id != user_id)
+
+        res = await db_session.execute(query)
+        return res.all()

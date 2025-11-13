@@ -85,8 +85,62 @@ async def create_dating_profile(c: types.CallbackQuery, state: FSMContext, db_se
     await c.message.answer("Ваша анкета успешно создана и теперь видна другим пользователям!")
 
 
-async def send_profiles(c: types.CallbackQuery):
+@connection
+async def send_first_profile(c: types.CallbackQuery, db_session: AsyncSession, *args):
+    page = int(c.data.split('_')[1])
 
+    profiles = await DatingProfileDAO.get_profiles_for_user(db_session=db_session, user_id=c.from_user.id)
+
+    if profiles:
+        profile = profiles[0]
+
+        await c.message.answer_photo(
+            photo=profile.photo,
+            caption=get_dating_profile_descr(
+                name=profile.user.profile.name,
+                description=profile.description,
+                interests=profile.interests,
+                goal=profile.goal
+            ),
+            reply_markup=get_dating_profile_markup(profile.id, page)
+        )
+
+        await c.answer()
+    else:
+        await c.answer("Не найдено анект, попробуйте в другой раз", show_alert=True)
+
+
+@connection
+async def next_profile(c: types.CallbackQuery, db_session: AsyncSession, *args):
+    page = int(c.data.split('_')[1])
+
+    profiles = await DatingProfileDAO.get_profiles_for_user(db_session=db_session, user_id=c.from_user.id)
+
+    if profiles:
+        if abs(page) >= len(profiles):
+            page = 0
+
+        profile = profiles[0]
+
+        await c.message.edit_media(
+            media=types.InputMediaPhoto(
+                media=profile.photo,
+                caption=get_dating_profile_descr(
+                    name=profile.user.profile.name,
+                    description=profile.description,
+                    interests=profile.interests,
+                    goal=profile.goal
+                ),
+            )
+        )
+
+        await c.message.edit_reply_markup(
+            reply_markup=get_dating_profile_markup(profile.id, page)
+        )
+
+        await c.answer()
+    else:
+        await c.answer("Не найдено анект, попробуйте в другой раз", show_alert=True)
 
 
 

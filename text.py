@@ -12,13 +12,14 @@ def get_activity_suggestion_text(name, description, date: str, place, username):
 Место встречи: {place}
 """
 
-def get_dating_profile_descr(alias, description, username):
+def get_dating_profile_descr(name, description, interests, goal):
     return f"""
-{alias}
+{name}
+Цель знакомства: {goal}
 
 {description}
 
-@{username}
+Интересы: {interests}
 """
 
 
@@ -28,7 +29,7 @@ def get_initiative_text(date, place, comment, activity_type):
 📍 {place}  
 📅 {date.strftime("%d-%m-%Y %H:%M")}  
 🏃‍♀️ Тип активности: {activity_type}
-💬 {comment}      
+💬 {comment}
 """
 
 

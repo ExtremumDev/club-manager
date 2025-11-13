@@ -1,3 +1,5 @@
+from typing import LiteralString
+
 from aiogram import types, Dispatcher, F
 from aiogram.filters import CommandStart, StateFilter
 from aiogram.fsm.context import FSMContext
@@ -148,4 +150,15 @@ def register_dating_handlers(dp: Dispatcher):
     dp.callback_query.register(what_to_do, F.data == "dating")
     dp.callback_query.register(ask_profile_photo, F.data == "create_dating_profile")
     dp.message.register(ask_descr, StateFilter(CreateDatingProfileFSM.profile_photo_state))
-    dp.message.register(create_dating_profile, StateFilter(CreateDatingProfileFSM.description_state))
+    dp.message.register(ask_interests, StateFilter(CreateDatingProfileFSM.description_state))
+    dp.message.register(ask_goal, StateFilter(CreateDatingProfileFSM.interests_state))
+    dp.callback_query.register(
+        create_dating_profile,
+        F.data.startswith("dgoal_"),
+        StateFilter(CreateDatingProfileFSM.goal_state)
+    )
+
+    # Listing
+
+    dp.callback_query.register(send_first_profile, F.data == "watch_dating")
+    dp.callback_query.register(next_profile, F.data.startswith("nextprofile_"))

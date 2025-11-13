@@ -7,8 +7,8 @@ def get_dating_profile_markup(profile_id, page: int):
         inline_keyboard=[
             [InlineKeyboardButton(text="Хочу познакомиться", callback_data=f"like_{profile_id}")],
             [
-                InlineKeyboardButton(text="<-", callback_data=f"profile_{page - 1}"),
-                InlineKeyboardButton(text="->", callback_data=f"profile_{page + 1}")
+                InlineKeyboardButton(text="<-", callback_data=f"nextprofile_{page - 1}"),
+                InlineKeyboardButton(text="->", callback_data=f"nextprofile_{page + 1}")
             ]
         ]
     )

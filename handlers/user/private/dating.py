@@ -4,10 +4,10 @@ from aiogram.fsm.context import FSMContext
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.dao import UserDAO
+from database.dao import UserDAO, DatingProfileDAO
 from database.utils import connection
 
-from markups.user.dating import dating_actions_markup
+from markups.user.dating import dating_actions_markup, dating_goal_markup, get_dating_profile_markup
 
 from fsm.user.private import CreateDatingProfileFSM
 
@@ -60,28 +60,33 @@ async def ask_goal(m: types.Message, state: FSMContext):
 
     await m.answer(
         "С какой целью хотите найти людей?",
-        reply_markup=
+        reply_markup=dating_goal_markup
     )
 
 
-async def create_dating_profile(m: types.Message, state: FSMContext):
+@connection
+async def create_dating_profile(c: types.CallbackQuery, state: FSMContext, db_session: AsyncSession, *args):
     s_data = await state.get_data()
+    await state.clear()
 
-    await m.bot.send_photo(
-        chat_id=chat_settings.GROUP_ID,
-        message_thread_id=chat_settings.DATING_PROFILES_THREAD_ID,
-        photo=s_data['photo'],
-        caption=get_dating_profile_descr(
-            s_data['alias'],
-            m.text.strip(),
-            m.from_user.username
-        ),
+    goal_index = int(c.data.split('_')[1])
+    goal_markup = c.message.reply_markup
+    goal = goal_markup.inline_keyboard[goal_index][0].text
+    await c.answer()
+
+    await DatingProfileDAO.add(
+        db_session,
+        photo=s_data["photo"],
+        description=s_data["descr"],
+        interests=s_data["interests"],
+        goal=goal
     )
 
-    await m.answer("Ваша анкета успешно создана и теперь видна другим пользователям!")
+    await c.message.answer("Ваша анкета успешно создана и теперь видна другим пользователям!")
 
 
-async def send_profiles_list(c: types.CallbackQuery):
+async def send_profiles(c: types.CallbackQuery):
+
 
 
 

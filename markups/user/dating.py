@@ -1,6 +1,19 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 
+
+def get_dating_profile_markup(profile_id, page: int):
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="Хочу познакомиться", callback_data=f"like_{profile_id}")],
+            [
+                InlineKeyboardButton(text="<-", callback_data=f"profile_{page - 1}"),
+                InlineKeyboardButton(text="->", callback_data=f"profile_{page + 1}")
+            ]
+        ]
+    )
+
+
 dating_actions_markup = InlineKeyboardMarkup(
     inline_keyboard=[
         [InlineKeyboardButton(text="Создать анкету", callback_data="create_dating_profile")],

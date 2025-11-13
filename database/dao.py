@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import select, asc, update
 from sqlalchemy.orm import joinedload, selectinload
 
-from .models import User, MemberEvent, EventMembership, Initiative, UserProfile
+from .models import User, MemberEvent, EventMembership, Initiative, UserProfile, DatingProfile
 
 
 class BaseDAO:
@@ -183,3 +183,9 @@ class InitiativeDAO(BaseDAO):
 
 class UserProfileDAO(BaseDAO):
     model = UserProfile
+
+
+class DatingProfileDAO(BaseDAO):
+    model = DatingProfile
+
+    def

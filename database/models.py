@@ -63,6 +63,7 @@ class UserProfile(Base):
         "User",
         back_populates="profile"
     )
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
 
     name: Mapped[str] = mapped_column(String(100), server_default="Не указано")
     alias: Mapped[str] = mapped_column(String(100), server_default="Анонимный пользователь")
@@ -132,6 +133,16 @@ class EventMembership(Base):
     is_bot_user: Mapped[bool] = mapped_column(default=True)
 
 
-class DatingProfiles(Base):
+class DatingProfile(Base):
 
+    user: Mapped["User"] = relationship(
+        "User",
+        back_populates="dating_profiles"
+    )
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+
+    photo: Mapped[str] = mapped_column(String(300))
+    description: Mapped[str] = mapped_column(String(300))
+    interests: Mapped[str] = mapped_column(String(300))
+    goal: Mapped[str] = mapped_column(String(20))
 

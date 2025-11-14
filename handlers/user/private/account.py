@@ -21,7 +21,14 @@ async def send_account_info(c: types.CallbackQuery, db_session: AsyncSession):
     user = await UserDAO.get_obj(db_session, telegram_id=c.from_user.id)
 
     await c.message.answer(
-        text=get_account_description(user.rating, user.name, user.alias, user.register_date, user.interests, user.city),
+        text=get_account_description(
+            rating=user.profile.rating,
+            user_name=user.profile.name,
+            alias=user.profile.alias,
+            reg_date=user.register_date,
+            interests=user.profile.interests,
+            city=user.profile.city
+        ),
         reply_markup=account_manage_markup
     )
 

@@ -28,7 +28,7 @@ async def start_cmd(m: types.Message, state: FSMContext, db_session: AsyncSessio
     if not user:
         reg = True
         await UserDAO.register_user(
-            db_session, m.from_user.id, m.from_user.username, True
+            db_session, m.from_user.id, m.from_user.username, False
         )
     else:
         if not user.has_private:

@@ -63,7 +63,7 @@ async def update_value(m: types.Message, state: FSMContext, db_session: AsyncSes
     s_data = await state.get_data()
 
     user = await UserDAO.get_obj(db_session, telegram_id=m.from_user.id)
-    user.__setattr__(s_data["key"], m.text.strip())
+    user.profile.__setattr__(s_data["key"], m.text.strip())
     await db_session.commit()
 
 

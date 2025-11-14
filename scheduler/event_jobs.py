@@ -1,6 +1,7 @@
 import asyncio
 import random
 
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 
 
@@ -22,6 +23,14 @@ from text import (
     two_hours_before_text_business, two_hours_before_text_french, two_hours_before_text_women,
     day_before_text_business, day_before_text_french, day_before_text_women
 )
+
+
+def setup_default_jobs(scheduler: AsyncIOScheduler):
+    scheduler.add_job(
+        func=send_random_user,
+        trigger=CronTrigger(day_of_week=0, hour=10, minute=0, second=0),
+        jobstore="memory"
+    )
 
 
 def setup_event_notifications(

@@ -5,15 +5,7 @@ from apscheduler.jobstores.memory import MemoryJobStore
 from apscheduler.executors.pool import ThreadPoolExecutor
 from apscheduler.triggers.cron import CronTrigger
 
-from scheduler.event_jobs import send_random_user
 
-
-def setup_default_jobs(scheduler: AsyncIOScheduler):
-    scheduler.add_job(
-        func=send_random_user,
-        trigger=CronTrigger(day_of_week=0, hour=10, minute=0, second=0),
-        jobstore="memory"
-    )
 
 
 jobstores = {

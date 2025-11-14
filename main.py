@@ -3,8 +3,9 @@ import asyncio
 
 from bot import bot, dp
 from handlers import register_all_handlers
+from scheduler.event_jobs import setup_default_jobs
 from utils.logger import get_bot_logger, setup_logger
-from scheduler.scheduler import scheduler, setup_default_jobs
+from scheduler.scheduler import scheduler
 
 
 async def on_startup():

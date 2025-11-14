@@ -12,16 +12,6 @@ main_user_markup = InlineKeyboardMarkup(
         ],
         [
             InlineKeyboardButton(
-                text="💡 Создать инициативу",
-                callback_data="create_initiative"
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text="💌 Знакомства и общение",
-                callback_data="dating"
-            ),
-            InlineKeyboardButton(
                 text="☕️ Рандеву-кофе",
                 callback_data="randevu_coffee"
             )
@@ -32,12 +22,6 @@ main_user_markup = InlineKeyboardMarkup(
                 callback_data="poster"
             )
         ],
-        [
-            InlineKeyboardButton(
-                text="Предложить активность",
-                callback_data="suggest_activity"
-            )
-        ]
     ]
 )
 

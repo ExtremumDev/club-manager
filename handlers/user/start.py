@@ -8,6 +8,7 @@ from sqlalchemy.util import await_fallback
 
 from fsm.user.private import RegistrationFSM
 from markups.admin.main import main_markup_for_admin
+from markups.user.dating import dating_goal_markup
 
 from markups.user.main import main_user_markup
 from markups.user.account import registration_skip_step_markup, sex_choice_markup
@@ -56,13 +57,26 @@ async def ask_interests(m: types.Message, state: FSMContext):
         "Расскажите о своих интересах"
     )
 
+async def ask_goal(m: types.Message, state: FSMContext):
+    await state.set_state(RegistrationFSM.goal_state)
+    await state.update_data(interests=m.text.strip())
 
-async def ask_sex(m: types.Message, state: FSMContext):
+    await m.answer(
+        "С какой целью хотите найти людей?",
+        reply_markup=dating_goal_markup
+    )
+
+
+async def ask_sex(c: types.CallbackQuery, state: FSMContext):
 
     await state.set_state(RegistrationFSM.sex_state)
 
-    await state.update_data(interests=m.text)
-    await m.answer("Выберите свой пол (опционально)", reply_markup=sex_choice_markup)
+    goal_index = int(c.data.split('_')[1])
+    goal_markup = c.message.reply_markup
+    goal = goal_markup.inline_keyboard[goal_index][0].text
+
+    await state.update_data(goal=goal)
+    await c.message.answer("Выберите свой пол (опционально)", reply_markup=sex_choice_markup)
 
 
 async def ask_social_link(c: types.CallbackQuery, state: FSMContext):
@@ -108,7 +122,8 @@ async def finish_registration(
         name=state_data['name'],
         interests=state_data['interests'],
         sex=state_data['sex'],
-        social_link=state_data['social_link']
+        social_link=state_data['social_link'],
+        goal=state_data['goal']
     )
 
     user.profile = profile
@@ -137,7 +152,8 @@ def register_user_start_handlers(dp: Dispatcher):
     )
 
     dp.message.register(ask_interests, StateFilter(RegistrationFSM.name_state))
-    dp.message.register(ask_sex, StateFilter(RegistrationFSM.interests_state))
+    dp.message.register(ask_goal, StateFilter(RegistrationFSM.interests_state))
+    dp.callback_query.register(ask_sex, F.data.startswith("dgoal_"), StateFilter(RegistrationFSM.interests_state))
     dp.callback_query.register(ask_social_link, StateFilter(RegistrationFSM.sex_state))
     dp.message.register(get_social_link, StateFilter(RegistrationFSM.social_link_state))
     dp.callback_query.register(

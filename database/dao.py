@@ -71,7 +71,7 @@ class UserDAO(BaseDAO):
 
     @classmethod
     async def get_active_users(cls, session: AsyncSession):
-        query = select(cls.model).filter_by(has_private=True)
+        query = select(cls.model).options(selectinload(User.profile)).filter_by(has_private=True)
 
         result = await session.execute(query)
 
@@ -81,8 +81,8 @@ class UserDAO(BaseDAO):
 
     @classmethod
     async def change_user_rating(cls, session: AsyncSession, telegram_id: int, change: int):
-        query = update(cls.model).where(User.telegram_id==telegram_id).values(
-            rating=User.rating + change
+        query = update(UserProfile).where(UserProfile.user.telegram_id==telegram_id).values(
+            rating=User.profile.rating + change
         )
 
         await session.execute(query)

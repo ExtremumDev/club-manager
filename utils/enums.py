@@ -3,7 +3,7 @@ from enum import Enum
 
 from text import (
     get_french_club_card_text,
-    get_buisness_meet_card_text,
+    get_business_meet_card_text,
     get_table_game_card_text,
     get_women_meets_card_text,
 )
@@ -20,7 +20,7 @@ class EventType(Enum):
     def get_card_text(self, **kwargs):
         functions = {
             EventType.FRENCH_CLUB: get_french_club_card_text,
-            EventType.BUISNESS_MEETS: get_buisness_meet_card_text,
+            EventType.BUISNESS_MEETS: get_business_meet_card_text,
             EventType.TABLE_GAMES: get_table_game_card_text,
             EventType.WOMEN_MEETS: get_women_meets_card_text
 

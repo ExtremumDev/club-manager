@@ -1,6 +1,13 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 
+def get_random_user_markup(user_id: int):
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="Написать пользователю", callback_data=f"contactuser_{user_id}")]
+        ]
+    )
+
 
 def get_dating_profile_markup(profile_id, page: int):
     return InlineKeyboardMarkup(

@@ -20,7 +20,7 @@ from markups.user.events import get_take_part_in_event_markup
 from fsm.admin.events_manage import CreateEventFSM
 
 from text import (
-    get_buisness_meet_card_text,
+    get_business_meet_card_text,
     get_french_club_card_text,
     get_women_meets_card_text,
     get_table_game_card_text

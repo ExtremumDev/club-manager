@@ -1,14 +1,17 @@
+import asyncio
+import random
+
 from apscheduler.triggers.cron import CronTrigger
 
 
-from aiogram.exceptions import TelegramForbiddenError
+from aiogram.exceptions import TelegramBadRequest
 
 
 import datetime
 
 from utils.enums import EventType
 
-from database.dao import MembersEventDAO
+from database.dao import MembersEventDAO, UserDAO
 from database.utils import connection
 
 from bot import bot
@@ -85,5 +88,42 @@ async def send_event_notification(event_id: int, message: str, db_session, *args
                 user.telegram_id,
                 text=message
             )
-        except TelegramForbiddenError:
+        except TelegramBadRequest:
             pass
+
+
+@connection
+async def send_random_user(db_session, *args):
+    def get_random_user(users_list, user_id):
+        random_user = random.choice(users_list)
+
+        if random_user.telegram_id == user_id:
+            return get_random_user(users_list, user_id)
+        else:
+            return random_user
+
+
+    users = await UserDAO.get_active_users(db_session)
+
+    for u in users:
+        random_user = get_random_user(users, u.telegram_id)
+        try:
+            await bot.send_message(
+                chat_id=u.telegram_id,
+                text="Не хотели бы вы познакомиться с этим человеком?👇"
+            )
+            await bot.send_message(
+                chat_id=u.telegram_id,
+                text=f"""
+@{random_user.telegram_username}
+
+Имя: {random_user.profile.name}
+
+Интересы: {random_user.profile.interests}
+""",
+                reply_markup=None
+            )
+        except TelegramBadRequest:
+            continue
+
+        await asyncio.sleep(1)

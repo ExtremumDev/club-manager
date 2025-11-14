@@ -54,7 +54,7 @@ def get_women_meets_card_text(date_time, place, description, members_left, holde
 💬 {description}
 """
 
-def get_buisness_meet_card_text(date_time, place, description, members_left, holder, **kwargs):
+def get_business_meet_card_text(date_time, place, description, members_left, holder, **kwargs):
     return f"""
 💼 Мастермайнды / Бизнес
 🗣 Ведущий - {holder}

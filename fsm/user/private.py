@@ -27,6 +27,7 @@ class RegistrationFSM(StatesGroup):
     social_link_state = State()
     sex_state = State()
     interests_state = State()
+    goal_state = State()
 
 
 class UpdateProfileFSM(StatesGroup):

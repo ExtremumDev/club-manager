@@ -69,7 +69,12 @@ async def update_value(m: types.Message, state: FSMContext, db_session: AsyncSes
 
     await m.answer(
         text="Ваш обновленный профиль:\n\n" + get_account_description(
-            user.rating, user.name, user.alias, user.register_date, user.interests, user.city
+            rating=user.profile.rating,
+            user_name=user.profile.name,
+            alias=user.profile.alias,
+            reg_date=user.register_date,
+            interests=user.profile.interests,
+            city=user.profile.city
         ),
         reply_markup=account_manage_markup
     )

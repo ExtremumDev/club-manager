@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.util import await_fallback
 
 from fsm.user.private import RegistrationFSM
+from markups.admin.main import main_markup_for_admin
 
 from markups.user.main import main_user_markup
 from markups.user.account import registration_skip_step_markup, sex_choice_markup
@@ -19,7 +20,7 @@ from utils.enums import Sex
 
 
 @connection
-async def start_cmd(m: types.Message, state: FSMContext, db_session: AsyncSession):
+async def start_cmd(m: types.Message, state: FSMContext, db_session: AsyncSession, *args):
     await state.clear()
 
     user = await UserDAO.get_obj(db_session, telegram_id=m.from_user.id)
@@ -144,10 +145,17 @@ async def finish_registration(
 
     await db_session.commit()
 
-    await m.answer(
-        "Регистрация прошла успешно. Какие ваши дальнейшие действия?",
-        reply_markup=main_user_markup
-    )
+    if user.is_admin:
+
+        await m.answer(
+            text="Добро пожаловать!",
+            reply_markup=main_markup_for_admin
+        )
+    else:
+        await m.answer(
+            "Регистрация прошла успешно. Какие ваши дальнейшие действия?",
+            reply_markup=main_user_markup
+        )
 
 
 def register_user_start_handlers(dp: Dispatcher):

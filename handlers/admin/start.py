@@ -9,9 +9,11 @@ from database.utils import connection
 from filters.user_filters import AdminFilter
 from markups.admin.main import main_admin_markup, main_markup_for_admin
 
+from handlers.user.start import start_cmd
+
 
 @connection
-async def start_cmd(m: types.Message, state: FSMContext, db_session, *args):
+async def admin_start_cmd(m: types.Message, state: FSMContext, db_session, *args):
     await state.clear()
 
     user = await UserDAO.get_obj(
@@ -23,9 +25,12 @@ async def start_cmd(m: types.Message, state: FSMContext, db_session, *args):
             db_session,
             telegram_id=m.from_user.id,
             username=m.from_user.username,
-            has_bot_chat=True,
+            has_bot_chat=False,
             is_admin=True
         )
+
+        await start_cmd(m, state)
+        return None
 
     await m.answer(
         text="Добро пожаловать!",
@@ -51,7 +56,7 @@ async def back_to_menu(c: types.CallbackQuery):
 
 def register_start_handlers(dp: Dispatcher) -> None:
     dp.message.register(
-        start_cmd,
+        admin_start_cmd,
         CommandStart(),
         AdminFilter(),
         F.chat.type == ChatType.PRIVATE,

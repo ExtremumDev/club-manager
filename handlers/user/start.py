@@ -128,7 +128,7 @@ async def finish_registration(
     m: types.Message, state_data: dict, user_id: int, db_session: AsyncSession, *args
 ):
 
-    user = await UserDAO.get_obj(db_session, telegram_id=m.from_user.id)
+    user = await UserDAO.get_obj(db_session, telegram_id=user_id)
 
     user.has_private = True
 

@@ -20,22 +20,24 @@ async def admin_start_cmd(m: types.Message, state: FSMContext, db_session, *args
         db_session,
         telegram_id=m.from_user.id,
     )
-    if not user or not user.has_private:
-        await UserDAO.register_user(
-            db_session,
-            telegram_id=m.from_user.id,
-            username=m.from_user.username,
-            has_bot_chat=False,
-            is_admin=True
+    if user and user.has_private:
+        await m.answer(
+            text="Добро пожаловать!",
+            reply_markup=main_markup_for_admin
         )
+    else:
+        if not user:
+            await UserDAO.register_user(
+                db_session,
+                telegram_id=m.from_user.id,
+                username=m.from_user.username,
+                has_bot_chat=False,
+                is_admin=True
+            )
 
         await start_cmd(m, state)
-        return None
 
-    await m.answer(
-        text="Добро пожаловать!",
-        reply_markup=main_markup_for_admin
-    )
+
 
 
 async def open_admin_panel(c: types.CallbackQuery):

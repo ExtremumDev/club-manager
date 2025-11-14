@@ -37,7 +37,7 @@ async def start_cmd(m: types.Message, state: FSMContext, db_session: AsyncSessio
     if reg:
         await state.set_state(RegistrationFSM.name_state)
         await m.answer_photo(
-            photo=types.FSInputFile("image/start_image.jpg"),
+            photo=types.FSInputFile("images/start_image.jpg"),
             caption="""
 Приветстсвую! Я твой помощник в комьюнити RendezVous.\n Давай познакомимся. Как тебя зовут?
 """

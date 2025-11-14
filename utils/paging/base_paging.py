@@ -15,7 +15,7 @@ class Paging:
     prefix = ""
     total_pages = 0
     queryset = []
-    self.objects_in_page = 5
+    objects_in_page = 5
 
     def __init__(self, page: int = 0, prefix: str = ''):
         self.page = page

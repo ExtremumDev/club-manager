@@ -121,11 +121,11 @@ async def get_social_link(m: types.Message, state: FSMContext):
 async def skip_social_link(c: types.CallbackQuery, state: FSMContext):
     await state.update_data(social_link=None)
     await c.answer()
-    await finish_registration(c.message, await state.get_data())
+    await finish_registration(c.message, await state.get_data(), user_id=c.from_user.id)
 
 @connection
 async def finish_registration(
-    m: types.Message, state_data: dict, db_session: AsyncSession, *args
+    m: types.Message, state_data: dict, user_id: int, db_session: AsyncSession, *args
 ):
 
     user = await UserDAO.get_obj(db_session, telegram_id=m.from_user.id)

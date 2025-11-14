@@ -23,15 +23,15 @@ async def start_cmd(m: types.Message, state: FSMContext, db_session: AsyncSessio
     await state.clear()
 
     user = await UserDAO.get_obj(db_session, telegram_id=m.from_user.id)
-    reg = True
+    reg = False
     if not user:
-        reg = False
+        reg = True
         await UserDAO.register_user(
             db_session, m.from_user.id, m.from_user.username, True
         )
     else:
         if not user.has_private:
-            reg = False
+            reg = True
 
     if reg:
         await m.answer(

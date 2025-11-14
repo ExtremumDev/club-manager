@@ -59,7 +59,7 @@ async def send_event_info(c: types.CallbackQuery, db_session: AsyncSession, *arg
 
 
 def register_poster_handlers(dp: Dispatcher):
-    dp.callback_query.register(ask_event_type, F.data == "my_events")
+    dp.callback_query.register(ask_event_type, F.data == "poster")
     dp.callback_query.register(send_event_list, F.data.startswith("afeeventtype_"))
     EventsPaging.register_paging_handlers(dp, data_prefix="af")
     dp.callback_query.register(send_event_info, F.data.startswith("afventm_"))

@@ -20,12 +20,16 @@ main_user_markup = InlineKeyboardMarkup(
             InlineKeyboardButton(
                 text="💌 Знакомства и общение",
                 callback_data="dating"
+            ),
+            InlineKeyboardButton(
+                text="☕️ Рандеву-кофе",
+                callback_data="randevu_coffee"
             )
         ],
         [
             InlineKeyboardButton(
-                text="☕️ Рандеву-кофе",
-                callback_data="randevu_coffee"
+                text="Посмотреть афишу",
+                callback_data="poster"
             )
         ],
         [

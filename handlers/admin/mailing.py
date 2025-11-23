@@ -2,7 +2,7 @@ from aiogram import types, Dispatcher, F
 from aiogram.filters import CommandStart, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.enums import ChatType
-from aiogram.exceptions import TelegramForbiddenError
+from aiogram.exceptions import TelegramBadRequest
 
 
 from asyncio import sleep
@@ -107,14 +107,14 @@ async def get_confirmation(c: types.CallbackQuery, state: FSMContext, db_session
                         chat_id=u.telegram_id,
                         text=message_text
                     )
-            except TelegramForbidden:
+            except TelegramBadRequest:
                 pass
             
             if i % 15 == 0:
-                sleep(3)
+                await sleep(3)
 
 
-def regster_create_mailing_handlers(dp: Dispatcher):
+def register_create_mailing_handlers(dp: Dispatcher):
     dp.callback_query.register(ask_main_message, F.data == "mailing", AdminFilter())
     dp.message.register(ask_photo, StateFilter(CreateMailingFSM.message_state))
     dp.message.register(confirm_mailing, StateFilter(CreateMailingFSM.photo_state))

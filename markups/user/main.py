@@ -13,7 +13,7 @@ main_user_markup = InlineKeyboardMarkup(
         [
             InlineKeyboardButton(
                 text="☕️ Рандеву-кофе",
-                callback_data="randevu_coffee"
+                callback_data="randevu-coffee"
             )
         ],
         [

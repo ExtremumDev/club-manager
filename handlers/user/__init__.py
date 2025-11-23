@@ -15,3 +15,4 @@ def register_user_handlers(dp):
     register_create_suggestion_handlers(dp)
     register_events_manage_handlers(dp)
     register_poster_handlers(dp)
+    register_randevu_handlers(dp)

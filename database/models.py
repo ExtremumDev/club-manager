@@ -62,6 +62,8 @@ class User(Base):
         back_populates="user"
     )
 
+    randevu_notifications: Mapped[bool] = mapped_column(server_default="1")
+
 
 class UserProfile(Base):
     user: Mapped["User"] = relationship(

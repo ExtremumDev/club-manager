@@ -136,3 +136,4 @@ async def send_random_user(db_session, *args):
             continue
 
         await asyncio.sleep(1)
+

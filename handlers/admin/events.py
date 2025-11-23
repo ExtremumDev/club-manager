@@ -46,9 +46,9 @@ async def ask_date_time(c: types.CallbackQuery, state: FSMContext):
     """
     Создание события универсально сразу для разных видов событий
     """
-    event_type = EventType(int(c.data.split('_')[1]))
+    event_type_id = int(c.data.split('_')[1])
     await state.set_state(CreateEventFSM.date_time_state)
-    await state.update_data(event_type=event_type)
+    await state.update_data(event_type=event_type_id)
 
     await c.message.answer(
         "Введите дату и время мероприятия в формате ДД-ММ-ГГГГ чч:мм"
@@ -82,7 +82,7 @@ async def ask_description(m: types.Message, state: FSMContext):
     
 
     s_data = await state.get_data()
-    if s_data['event_type'] == EventType.TABLE_GAMES:
+    if s_data['event_type'] == EventType.TABLE_GAMES.value():
         await state.set_state(CreateEventFSM.game_name_state)
         await m.answer(
             "Введите название игры"
@@ -108,7 +108,7 @@ async def get_description(m: types.Message, state: FSMContext):
 
     s_data = await state.get_data()
 
-    if s_data['event_type'] == EventType.WOMEN_MEETS:
+    if s_data['event_type'] == EventType.WOMEN_MEETS.value():
         await state.clear()
         s_data['members_limit'] = 10
         await create_event(m.bot, m.from_user.id, s_data)
@@ -129,6 +129,7 @@ async def get_members_limit(m: types.Message, state: FSMContext):
 
 @connection
 async def create_event(bot, creator_id: int, state_data: dict, db_session: AsyncSession):
+    event_type = EventType(state_data['event_type'])
 
     new_event = await MembersEventDAO.create_event(
         db_session,
@@ -136,14 +137,14 @@ async def create_event(bot, creator_id: int, state_data: dict, db_session: Async
         state_data['place'],
         state_data['descr'],
         state_data['members_limit'],
-        state_data['event_type'],
+        event_type,
         state_data.get("game_name", None),
         state_data['holder']
     )
 
     message_text = new_event.event_type.get_card_text(**new_event.model_to_dict())
 
-    match (state_data['event_type']):
+    match (event_type):
         case (EventType.BUISNESS_MEETS):
             thread_id = chat_settings.BUISNESS_MEETS_THREAD_ID
         case (EventType.WOMEN_MEETS):
@@ -159,7 +160,7 @@ async def create_event(bot, creator_id: int, state_data: dict, db_session: Async
         text=message_text,
         reply_markup=get_take_part_in_event_markup(
             new_event.id,
-            state_data['event_type'].value
+            state_data['event_type']
         )
     )
 
@@ -167,11 +168,11 @@ async def create_event(bot, creator_id: int, state_data: dict, db_session: Async
 
     await db_session.commit()
 
-    if state_data['event_type'] != EventType.TABLE_GAMES:
+    if event_type != EventType.TABLE_GAMES:
         setup_event_notifications(
             event_date_time=state_data['date_time'],
             event_id=new_event.id,
-            event_type=state_data['event_type']
+            event_type=event_type
         )
 
     await bot.send_message(

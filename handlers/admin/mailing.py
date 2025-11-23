@@ -51,7 +51,7 @@ async def confirm_mailing(m: types.Message, state: FSMContext):
 
     if m.photo:
         await m.answer_photo(
-            m.photo.file_id,
+            m.photo[0].file_id,
             caption=s_data['message']
         )
     else:

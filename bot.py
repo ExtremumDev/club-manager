@@ -7,4 +7,4 @@ from redis.asyncio import Redis
 from config import settings
 
 bot = Bot(settings.BOT_TOKEN)
-dp = Dispatcher(storage=RedisStorage(Redis()))
+dp = Dispatcher(storage=MemoryStorage())

@@ -102,4 +102,4 @@ def register_account_handlers(dp: Dispatcher):
     dp.callback_query.register(ask_what_to_change, F.data == "update_profile")
     dp.callback_query.register(ask_value, F.data.startswith("change_"), StateFilter(UpdateProfileFSM.key_state))
     dp.message.register(update_value, StateFilter(UpdateProfileFSM.value_state))
-    dp.callback_query.register(update_fun_rate, F.data.startswith("funrate_"), StateFilter(UpdateProfileFSM.key_state))
+    dp.callback_query.register(update_fun_rate, F.data.startswith("funrate_"), StateFilter(UpdateProfileFSM.value_state))

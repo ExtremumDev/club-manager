@@ -33,6 +33,9 @@ update_profile_markup = InlineKeyboardMarkup(
         ],
         [
             InlineKeyboardButton(text="Интересы",callback_data="change_interests")
+        ],
+        [
+            InlineKeyboardButton(text="Цель знакомств", callback_data="change_dating_fun_rate")
         ]
     ]
 )

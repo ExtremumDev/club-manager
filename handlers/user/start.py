@@ -12,6 +12,7 @@ from markups.user.dating import dating_goal_markup
 
 from markups.user.main import main_user_markup
 from markups.user.account import registration_skip_step_markup, sex_choice_markup
+from markups.user.dating import dating_fun_rate_markup
 
 from database.dao import UserDAO, UserProfileDAO
 from database.utils import connection
@@ -40,7 +41,7 @@ async def start_cmd(m: types.Message, state: FSMContext, db_session: AsyncSessio
         await m.answer_photo(
             photo=types.FSInputFile("images/start_image.jpg"),
             caption="""
-Приветстсвую! Я твой помощник в комьюнити RendezVous.\n Давай познакомимся. Как тебя зовут?
+Приветстсвую! Я твой помощник в комьюнити RendezVous.\n\n Давай познакомимся. Как тебя зовут? Напиши имя и фамилию
 """
         )
     else:
@@ -62,8 +63,10 @@ async def ask_goal(m: types.Message, state: FSMContext):
     await state.update_data(interests=m.text.strip())
 
     await m.answer(
-        "С какой целью хотите найти людей?",
-        reply_markup=dating_goal_markup
+        """
+Некоторые люди приходят на Random Coffee встречи, чтобы найти партнёров для будущих проектов и завести полезные контакты, условно назовём это "пользой". А кто-то приходит для расширения кругозора, новых эмоций и открытия чего-то нового, назовём это "фан". Какое описание больше подходит тебе?
+""",
+        reply_markup=dating_fun_rate_markup
     )
 
 
@@ -71,11 +74,9 @@ async def ask_sex(c: types.CallbackQuery, state: FSMContext):
 
     await state.set_state(RegistrationFSM.sex_state)
 
-    goal_index = int(c.data.split('_')[1])
-    goal_markup = c.message.reply_markup
-    goal = goal_markup.inline_keyboard[goal_index][0].text
+    fun_rate = int(c.data.split('_')[1])
 
-    await state.update_data(goal=goal)
+    await state.update_data(fun_rate=fun_rate)
     await c.message.answer("Выберите свой пол (опционально)", reply_markup=sex_choice_markup)
 
 
@@ -123,7 +124,7 @@ async def finish_registration(
         interests=state_data['interests'],
         sex=state_data['sex'],
         social_link=state_data['social_link'],
-        goal=state_data['goal']
+        dating_fun_rate=state_data['fun_rate']
     )
 
     user.profile = profile
@@ -153,7 +154,7 @@ def register_user_start_handlers(dp: Dispatcher):
 
     dp.message.register(ask_interests, StateFilter(RegistrationFSM.name_state))
     dp.message.register(ask_goal, StateFilter(RegistrationFSM.interests_state))
-    dp.callback_query.register(ask_sex, F.data.startswith("dgoal_"), StateFilter(RegistrationFSM.interests_state))
+    dp.callback_query.register(ask_sex, F.data.startswith("funrate_"), StateFilter(RegistrationFSM.interests_state))
     dp.callback_query.register(ask_social_link, StateFilter(RegistrationFSM.sex_state))
     dp.message.register(get_social_link, StateFilter(RegistrationFSM.social_link_state))
     dp.callback_query.register(

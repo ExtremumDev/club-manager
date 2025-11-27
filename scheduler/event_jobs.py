@@ -115,25 +115,26 @@ async def send_random_user(db_session, *args):
     users = await UserDAO.get_active_users(db_session)
 
     for u in users:
-        random_user = get_random_user(users, u.telegram_id)
-        try:
-            await bot.send_message(
-                chat_id=u.telegram_id,
-                text="Не хотели бы вы познакомиться с этим человеком?👇"
-            )
-            await bot.send_message(
-                chat_id=u.telegram_id,
-                text=f"""
-@{random_user.telegram_username}
-
-Имя: {random_user.profile.name}
-
-Интересы: {random_user.profile.interests}
-""",
-                reply_markup=None
-            )
-        except TelegramBadRequest:
-            continue
+        if u.randevu_notifications:
+            random_user = get_random_user(users, u.telegram_id)
+            try:
+                await bot.send_message(
+                    chat_id=u.telegram_id,
+                    text="Не хотели бы вы познакомиться с этим человеком?👇"
+                )
+                await bot.send_message(
+                    chat_id=u.telegram_id,
+                    text=f"""
+    @{random_user.telegram_username}
+    
+    Имя: {random_user.profile.name}
+    
+    Интересы: {random_user.profile.interests}
+    """,
+                    reply_markup=None
+                )
+            except TelegramBadRequest:
+                continue
 
         await asyncio.sleep(1)
 

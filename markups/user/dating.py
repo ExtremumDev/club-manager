@@ -36,3 +36,13 @@ dating_goal_markup = InlineKeyboardMarkup(
         [InlineKeyboardButton(text="Партнёры", callback_data="dgoal_2")]
     ]
 )
+
+dating_fun_rate_markup = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(text="100% фан", callback_data="funrate_100")],
+        [InlineKeyboardButton(text="75% фан, 25% польза", callback_data="funrate_75")],
+        [InlineKeyboardButton(text="50% фан, 50% польза", callback_data="funrate_50")],
+        [InlineKeyboardButton(text="25% фан, 75% польза", callback_data="funrate_25")],
+        [InlineKeyboardButton(text="100% польза", callback_data="funrate_0")],
+    ]
+)

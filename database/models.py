@@ -77,6 +77,7 @@ class UserProfile(Base):
     sex: Mapped[Sex] = mapped_column(nullable=True)
     social_link: Mapped[str] = mapped_column(String(100), nullable=True)
     goal: Mapped[str] = mapped_column(String(40), server_default=" ")
+    dating_fun_rate: Mapped[int] = mapped_column(server_default="0")
 
     rating: Mapped[int] = mapped_column(default=0)
 

@@ -122,17 +122,25 @@ async def send_random_user(db_session, *args):
                     chat_id=u.telegram_id,
                     text="Не хотели бы вы познакомиться с этим человеком?👇"
                 )
-                await bot.send_message(
-                    chat_id=u.telegram_id,
-                    text=f"""
-    @{random_user.telegram_username}
-    
-    Имя: {random_user.profile.name}
-    
-    Интересы: {random_user.profile.interests}
-    """,
-                    reply_markup=None
-                )
+                text = f"""
+@{random_user.telegram_username}
+
+Имя: {random_user.profile.name}
+
+Интересы: {random_user.profile.interests}
+"""
+                if random_user.profile.photo:
+                    await bot.send_photo(
+                        chat_id=u.telegram_id,
+                        photo=random_user.profile.photo,
+                        caption=text
+                    )
+                else:
+                    await bot.send_message(
+                        chat_id=u.telegram_id,
+                        text=text,
+                        reply_markup=None
+                    )
             except TelegramBadRequest:
                 continue
 

@@ -99,9 +99,8 @@ async def send_first_profile(c: types.CallbackQuery, db_session: AsyncSession, *
             photo=profile.photo,
             caption=get_dating_profile_descr(
                 name=profile.user.profile.name,
-                description=profile.description,
-                interests=profile.interests,
-                goal=profile.goal
+                social_link=profile.social_link,
+                interests=profile.interests
             ),
             reply_markup=get_dating_profile_markup(profile.id, 0)
         )
@@ -128,9 +127,8 @@ async def next_profile(c: types.CallbackQuery, db_session: AsyncSession, *args):
                 media=profile.photo,
                 caption=get_dating_profile_descr(
                     name=profile.user.profile.name,
-                    description=profile.description,
+                    social_link=profile.social_link,
                     interests=profile.interests,
-                    goal=profile.goal
                 ),
             )
         )

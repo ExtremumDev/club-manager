@@ -28,6 +28,7 @@ class RegistrationFSM(StatesGroup):
     sex_state = State()
     interests_state = State()
     goal_state = State()
+    photo_state = State()
 
 
 class UpdateProfileFSM(StatesGroup):

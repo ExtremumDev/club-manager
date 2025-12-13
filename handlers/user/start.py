@@ -1,7 +1,7 @@
 from aiogram import types, Dispatcher, F
 from aiogram.filters import CommandStart, StateFilter
 from aiogram.fsm.context import FSMContext
-from aiogram.enums import ChatType
+from aiogram.enums import ChatType, ContentType
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.util import await_fallback
@@ -16,6 +16,7 @@ from markups.user.dating import dating_fun_rate_markup
 
 from database.dao import UserDAO, UserProfileDAO
 from database.utils import connection
+from text import get_dating_profile_descr
 
 from utils.date import validate_date_time
 from utils.enums import Sex
@@ -101,13 +102,32 @@ async def ask_social_link(c: types.CallbackQuery, state: FSMContext):
 
 async def get_social_link(m: types.Message, state: FSMContext):
     await state.update_data(social_link=m.text)
-    await finish_registration(m, await state.get_data(), user_id=m.from_user.id)
+    await state.set_state(RegistrationFSM.photo_state)
+    await m.answer(
+        "Хочешь установить фото профиля? Если да - пришли фотографию, если нет - нажми кнопку внизу",
+        reply_markup=registration_skip_step_markup
+    )
 
 
 async def skip_social_link(c: types.CallbackQuery, state: FSMContext):
     await state.update_data(social_link=None)
     await c.answer()
-    await finish_registration(c.message, await state.get_data(), user_id=c.from_user.id)
+    await state.set_state(RegistrationFSM.photo_state)
+    await c.message.answer(
+        "Хочешь установить фото профиля? Если да - пришли фотографию, если нет - нажми кнопку внизу",
+        reply_markup=registration_skip_step_markup
+    )
+
+
+async def get_profile_photo(m: types.Message, state: FSMContext):
+    await state.update_data(profile_photo=m.photo[0].file_id)
+    await finish_registration(m=m, state_data=await state.get_data())
+
+
+async def skip_profile_photo(c: types.CallbackQuery, state: FSMContext):
+    await state.update_data(photo=None)
+    await c.answer()
+    await finish_registration(m=c.message, state_data=await state.get_data())
 
 @connection
 async def finish_registration(
@@ -124,7 +144,8 @@ async def finish_registration(
         interests=state_data['interests'],
         sex=state_data['sex'],
         social_link=state_data['social_link'],
-        dating_fun_rate=state_data['fun_rate']
+        dating_fun_rate=state_data['fun_rate'],
+        photo=state_data['photo']
     )
 
     user.profile = profile
@@ -139,9 +160,23 @@ async def finish_registration(
         )
     else:
         await m.answer(
-            "Регистрация прошла успешно. Какие ваши дальнейшие действия?",
+            """Получилось! 🙌
+
+Теперь ты участник нашего клуба
+
+Вот так будет выглядеть твой профиль в сообщении, которое мы пришлем твоему собеседнику:""",
             reply_markup=main_user_markup
         )
+
+        if profile.photo:
+            await m.answer_photo(
+                photo=profile.photo,
+                caption=get_dating_profile_descr(interests=profile.interests, name=profile.name, social_link=profile.social_link)
+            )
+        else:
+            await m.answer(
+                text=get_dating_profile_descr(name=profile.name, social_link=profile.social_link, interests=profile.interests)
+            )
 
 
 def register_user_start_handlers(dp: Dispatcher):
@@ -162,3 +197,6 @@ def register_user_start_handlers(dp: Dispatcher):
         F.data == "skip_step",
         StateFilter(RegistrationFSM.social_link_state)
     )
+
+    dp.message.register(get_profile_photo, StateFilter(RegistrationFSM.photo_state), F.content_type == ContentType.PHOTO)
+    dp.callback_query.register(skip_profile_photo, F.data == "skip_step", StateFilter(RegistrationFSM.photo_state))

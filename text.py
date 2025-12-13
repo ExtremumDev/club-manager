@@ -12,12 +12,10 @@ def get_activity_suggestion_text(name, description, date: str, place, username):
 Место встречи: {place}
 """
 
-def get_dating_profile_descr(name, description, interests, goal):
+def get_dating_profile_descr(name, social_link, interests):
     return f"""
 {name}
-Цель знакомства: {goal}
-
-{description}
+Профиль: {social_link}
 
 Интересы: {interests}
 """

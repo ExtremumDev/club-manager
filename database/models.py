@@ -79,6 +79,8 @@ class UserProfile(Base):
     goal: Mapped[str] = mapped_column(String(40), server_default=" ")
     dating_fun_rate: Mapped[int] = mapped_column(server_default="0")
 
+    photo: Mapped[str] = mapped_column(String(100), nullable=True)
+
     rating: Mapped[int] = mapped_column(default=0)
 
 

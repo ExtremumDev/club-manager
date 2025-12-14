@@ -118,7 +118,7 @@ async def get_confirmation(c: types.CallbackQuery, state: FSMContext, db_session
 @connection
 async def start_randevu_mailing(m: types.Message, db_session: AsyncSession, *args):
     await m.answer("Тестовый подбор собеседников запущен")
-    await send_random_user(db_session)
+    await send_random_user()
 
 
 def register_create_mailing_handlers(dp: Dispatcher):
@@ -130,4 +130,4 @@ def register_create_mailing_handlers(dp: Dispatcher):
         F.data.startswith("mail_"),
         StateFilter(CreateMailingFSM.confirm_state)
     )
-    dp.message.register(start_randevu_mailing, Command("randevu-test"))
+    dp.message.register(start_randevu_mailing, Command("randevu-test"), AdminFilter())

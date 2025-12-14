@@ -82,7 +82,7 @@ async def ask_description(m: types.Message, state: FSMContext):
     
 
     s_data = await state.get_data()
-    if s_data['event_type'] == EventType.TABLE_GAMES.value():
+    if s_data['event_type'] == EventType.TABLE_GAMES.value:
         await state.set_state(CreateEventFSM.game_name_state)
         await m.answer(
             "Введите название игры"
@@ -108,7 +108,7 @@ async def get_description(m: types.Message, state: FSMContext):
 
     s_data = await state.get_data()
 
-    if s_data['event_type'] == EventType.WOMEN_MEETS.value():
+    if s_data['event_type'] == EventType.WOMEN_MEETS.value:
         await state.clear()
         s_data['members_limit'] = 10
         await create_event(m.bot, m.from_user.id, s_data)

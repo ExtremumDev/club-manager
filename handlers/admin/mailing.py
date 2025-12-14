@@ -1,5 +1,5 @@
 from aiogram import types, Dispatcher, F
-from aiogram.filters import CommandStart, StateFilter
+from aiogram.filters import CommandStart, StateFilter, Command
 from aiogram.fsm.context import FSMContext
 from aiogram.enums import ChatType
 from aiogram.exceptions import TelegramBadRequest
@@ -18,6 +18,7 @@ from markups.admin.main import confirm_mailing_markup
 
 from database.dao import UserDAO
 from database.utils import connection
+from scheduler.event_jobs import send_random_user
 
 
 async def ask_main_message(c: types.CallbackQuery, state: FSMContext):
@@ -114,6 +115,12 @@ async def get_confirmation(c: types.CallbackQuery, state: FSMContext, db_session
                 await sleep(3)
 
 
+@connection
+async def start_randevu_mailing(m: types.Message, db_session: AsyncSession, *args):
+    await m.answer("Тестовый подбор собеседников запущен")
+    await send_random_user(db_session)
+
+
 def register_create_mailing_handlers(dp: Dispatcher):
     dp.callback_query.register(ask_main_message, F.data == "mailing", AdminFilter())
     dp.message.register(ask_photo, StateFilter(CreateMailingFSM.message_state))
@@ -123,3 +130,4 @@ def register_create_mailing_handlers(dp: Dispatcher):
         F.data.startswith("mail_"),
         StateFilter(CreateMailingFSM.confirm_state)
     )
+    dp.message.register(start_randevu_mailing, Command("randevu-test"))

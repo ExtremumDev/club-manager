@@ -3,6 +3,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.filters import StateFilter
 
 from sqlalchemy import delete
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from filters.user_filters import AdminFilter
 
@@ -59,7 +60,33 @@ async def switch_mode(c: types.CallbackQuery, db_session, *args):
     )
 
 
+@connection
+async def accept_randevu_user(c: types.CallbackQuery, db_session: AsyncSession, *args):
+    user_id = int(c.data.split('_')[1])
+
+    user = await UserDAO.get_obj(db_session, id=user_id)
+
+    if user:
+        await c.message.answer(
+            text=f"Отлично!\nНачинайте общение уже уже сейчас:\nЮзернейм: @{user.telegram_username}\nСсылка на профиль: {user.profile.social_link}"
+        )
+        await c.message.answer_photo(
+            photo=types.FSInputFile("images/randevu_card.jpg"),
+            caption="Не забывайте про правила общения"
+        )
+        await c.answer()
+    else:
+        await c.answer("Ошибка: пользователь не найден", show_alert=True)
+
+
+@connection
+async def decline_randevu_user(c: types.CallbackQuery, db_session: AsyncSession, *args):
+    await c.answer()
+
 
 def register_randevu_handlers(dp: Dispatcher):
     dp.callback_query.register(send_coffe_info, F.data == "randevu-coffee")
     dp.callback_query.register(switch_mode, F.data.startswith("randevu_"))
+
+    dp.callback_query.register(accept_randevu_user, F.data.startswith("acceptr_"))
+    dp.callback_query.register(decline_randevu_user, F.data.startswith("decline_randevu"))

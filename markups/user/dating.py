@@ -20,6 +20,14 @@ def get_dating_profile_markup(profile_id, page: int):
         ]
     )
 
+def get_randevu_accept_markup(user_id):
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="Да", callback_data=f"acceptr_{user_id}")],
+            [InlineKeyboardButton(text="Нет", callback_data="decline_randevu")]
+        ]
+    )
+
 
 dating_actions_markup = InlineKeyboardMarkup(
     inline_keyboard=[

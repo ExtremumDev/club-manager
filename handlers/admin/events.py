@@ -96,7 +96,7 @@ async def ask_description(m: types.Message, state: FSMContext):
 
 async def get_game_name(m: types.Message, state: FSMContext):
     await state.set_state(CreateEventFSM.descr_state)
-    await state.update_data(game_name=m.text.strip()[:499])
+    await state.update_data(game_name=m.text.strip())
 
     await m.answer(
         "Придумайте описание для встречи"
@@ -104,7 +104,7 @@ async def get_game_name(m: types.Message, state: FSMContext):
 
 
 async def get_description(m: types.Message, state: FSMContext):
-    await state.update_data(descr=m.text.strip())
+    await state.update_data(descr=m.text.strip()[:499])
 
     s_data = await state.get_data()
 

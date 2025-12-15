@@ -10,6 +10,7 @@ from aiogram.exceptions import TelegramBadRequest
 
 import datetime
 
+from markups.user.dating import get_randevu_accept_markup
 from utils.enums import EventType
 
 from database.dao import MembersEventDAO, UserDAO
@@ -133,13 +134,14 @@ async def send_random_user(db_session, *args):
                     await bot.send_photo(
                         chat_id=u.telegram_id,
                         photo=random_user.profile.photo,
-                        caption=text
+                        caption=text,
+                        reply_markup=get_randevu_accept_markup(random_user.id)
                     )
                 else:
                     await bot.send_message(
                         chat_id=u.telegram_id,
                         text=text,
-                        reply_markup=None
+                        reply_markup=get_randevu_accept_markup(random_user.id)
                     )
             except TelegramBadRequest:
                 continue

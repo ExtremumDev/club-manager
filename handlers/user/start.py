@@ -37,6 +37,10 @@ async def start_cmd(m: types.Message, state: FSMContext, db_session: AsyncSessio
         if not user.has_private:
             reg = True
 
+        if m.from_user.username != user.telegram_username:
+            user.telegram_username = m.from_user.username
+            await db_session.commit()
+
     if reg:
         await state.set_state(RegistrationFSM.name_state)
         await m.answer_photo(
@@ -176,6 +180,14 @@ async def finish_registration(
         else:
             await m.answer(
                 text=get_dating_profile_descr(name=profile.name, social_link=profile.social_link, interests=profile.interests)
+            )
+
+
+        if not user.telegram_name:
+            await m.answer(
+                """У вас не указано имя пользователя в телеграмме! Рекомендуем это сделать, чтобы облегчить общение и знакомство с другими пользователям
+Если установите или поменяете имя пользователя, воспользуйтесь командой /start , чтобы мы могли отследить изменения
+"""
             )
 
 

@@ -84,9 +84,28 @@ async def decline_randevu_user(c: types.CallbackQuery, db_session: AsyncSession,
     await c.answer()
 
 
+
+@connection
+async def edit_partition_in_randevu(c: types.CallbackQuery, db_session: AsyncSession, *args):
+    partition = int(c.data.split('_')[1])
+
+    if partition:
+        await c.answer("Отлично! Ждите предложений", show_alert=True)
+
+    else:
+        user = await UserDAO.get_obj(session=db_session, telegram_id=c.from_user.id)
+
+        user.randevu_notifications = False
+        await db_session.commit()
+
+        await c.answer("Будем ждать вас на следующей неделе!", show_alert=True)
+
+
 def register_randevu_handlers(dp: Dispatcher):
     dp.callback_query.register(send_coffe_info, F.data == "randevu-coffee")
     dp.callback_query.register(switch_mode, F.data.startswith("randevu_"))
 
     dp.callback_query.register(accept_randevu_user, F.data.startswith("acceptr_"))
     dp.callback_query.register(decline_randevu_user, F.data.startswith("decline_randevu"))
+
+    dp.callback_query.register(edit_partition_in_randevu, F.data.startswith("randevupartition_"))

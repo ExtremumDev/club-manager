@@ -54,3 +54,11 @@ dating_fun_rate_markup = InlineKeyboardMarkup(
         [InlineKeyboardButton(text="100% польза", callback_data="funrate_0")],
     ]
 )
+
+
+randevu_take_part_markup = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(text="Буду", callback_data="randevupartition_1")],
+        [InlineKeyboardButton(text="Нет", callback_data="randevupartition_0")]
+    ]
+)

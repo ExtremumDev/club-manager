@@ -10,7 +10,9 @@ from aiogram.exceptions import TelegramBadRequest
 
 import datetime
 
-from markups.user.dating import get_randevu_accept_markup
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from markups.user.dating import get_randevu_accept_markup, randevu_take_part_markup
 from utils.enums import EventType
 
 from database.dao import MembersEventDAO, UserDAO
@@ -146,5 +148,28 @@ async def send_random_user(db_session, *args):
             except TelegramBadRequest:
                 continue
 
-        await asyncio.sleep(1)
+        await asyncio.sleep(0.5)
 
+
+@connection
+async def ask_if_user_take_part(db_session: AsyncSession):
+
+    users = await UserDAO.get_active_users(db_session)
+
+    c = 0
+    for u in users:
+        try:
+            u.randevu_notifications = True
+            await bot.send_message(
+                chat_id=u.telegram_id,
+                text="Еженедельные стречи нашего клуба продолжаются. Будете участвовать на этой неделе?",
+                reply_markup=randevu_take_part_markup
+            )
+
+        except TelegramBadRequest:
+            continue
+
+        if c % 10 == 0:
+            await asyncio.sleep(0.5)
+
+    await db_session.commit()

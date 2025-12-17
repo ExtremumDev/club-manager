@@ -81,11 +81,6 @@ def get_account_description(rating: int, user_name: str, reg_date: datetime, int
 Дата регистрации: {reg_date.strftime("%d-%m-%Y %H:%M")}
 
 Интересы: {interests}
-
-Мои баллы: {rating}
-
-Мероприятий посещено: {0}
-
 """
 
 

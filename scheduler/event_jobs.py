@@ -35,6 +35,12 @@ def setup_default_jobs(scheduler: AsyncIOScheduler):
         jobstore="memory"
     )
 
+    scheduler.add_job(
+        func=ask_if_user_take_part,
+        trigger=CronTrigger(day_of_week=6, hour=17, minute=0, second=0),
+        jobstore="memory"
+    )
+
 
 def setup_event_notifications(
     event_date_time: datetime.datetime,

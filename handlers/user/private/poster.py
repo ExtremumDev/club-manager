@@ -85,6 +85,7 @@ async def send_events_for_week(c: types.CallbackQuery, db_session: AsyncSession,
         await last_message.edit_reply_markup(
             reply_markup=take_part_in_week_events_markup('_'.join(events_id))
         )
+        await c.answer()
     else:
 
         await c.answer("Не найдено событий на эту неделю", show_alert=True)

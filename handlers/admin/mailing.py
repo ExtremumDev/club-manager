@@ -31,13 +31,19 @@ async def ask_main_message(c: types.CallbackQuery, state: FSMContext):
 
 
 async def ask_photo(m: types.Message, state: FSMContext):
-    await state.set_state(CreateMailingFSM.photo_state)
-    await state.update_data(message=m.text.strip())
 
-    await m.answer(
-        """Пришлите фотографию, которая будет отправлена вместе с текстом
-Если картинка не нужна, то пришлите любой текст"""
-    )
+    if m.photo:
+        await state.update_data(messge=m.caption)
+        await confirm_mailing(m, state)
+    else:
+
+        await state.set_state(CreateMailingFSM.photo_state)
+        await state.update_data(message=m.text.strip())
+
+        await m.answer(
+            """Пришлите фотографию, которая будет отправлена вместе с текстом
+    Если картинка не нужна, то пришлите любой текст"""
+        )
 
 
 async def confirm_mailing(m: types.Message, state: FSMContext):

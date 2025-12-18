@@ -64,12 +64,22 @@ async def send_events_for_week(c: types.CallbackQuery, db_session: AsyncSession,
     if events:
         message_text = ""
         events_id = []
+        events_markup = []
 
         for e in events:
             message_text += e.event_type.get_card_text(**e.model_to_dict())
             message_text += "\n"
 
             events_id.append(str(e.id))
+
+            events_markup.append(
+                [
+                    types.InlineKeyboardButton(
+                        text=e.event_type.get_event_name(),
+                        callback_data=f"takepevent_{e.id}_{e.event_type}"
+                    )
+                ]
+            )
 
         parts = []
 
@@ -81,9 +91,11 @@ async def send_events_for_week(c: types.CallbackQuery, db_session: AsyncSession,
             last_message = await c.message.answer(
                 p
             )
+        markup = take_part_in_week_events_markup('_'.join(events_id))
 
+        markup.inline_keyboard.extend(events_markup)
         await last_message.edit_reply_markup(
-            reply_markup=take_part_in_week_events_markup('_'.join(events_id))
+            reply_markup=markup
         )
         await c.answer()
     else:

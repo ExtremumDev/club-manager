@@ -75,7 +75,7 @@ async def send_events_for_week(c: types.CallbackQuery, db_session: AsyncSession,
             events_markup.append(
                 [
                     types.InlineKeyboardButton(
-                        text=e.event_type.get_event_name(),
+                        text="Записаться на " + e.event_type.get_event_name(),
                         callback_data=f"takepevent_{e.id}_{e.event_type}"
                     )
                 ]

@@ -170,7 +170,7 @@ class MembersEventDAO(BaseDAO):
 
         res = await db_session.execute(query)
 
-        events = res.all()
+        events = res.scalars().all()
 
         return events
 

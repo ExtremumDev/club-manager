@@ -38,6 +38,6 @@ def get_take_part_in_event_markup(event_id: int, event_type: EventType):
 def take_part_in_week_events_markup(events_id: str):
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="Записаться на мероприятия", callback_data="manytakep_" + events_id)]
+            [InlineKeyboardButton(text="Записаться на все мероприятия", callback_data="manytakep_" + events_id)]
         ]
     )

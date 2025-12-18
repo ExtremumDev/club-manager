@@ -156,11 +156,11 @@ async def take_part_in_week_events(c: types.CallbackQuery, db_session: AsyncSess
 
 
 def register_poster_handlers(dp: Dispatcher):
+
+    dp.callback_query.register(send_events_for_week, F.data == "poster")
+    dp.callback_query.register(take_part_in_week_events, F.data.startswith("manytakep_"))
+
     dp.callback_query.register(ask_event_type, F.data == "poster")
     dp.callback_query.register(send_event_list, F.data.startswith("afeventtype_"))
     EventsPaging.register_paging_handlers(dp, data_prefix="af")
     dp.callback_query.register(send_event_info, F.data.startswith("afeventm_"))
-
-    dp.callback_query.register(send_events_for_week, F.data == "weeks_events")
-    dp.callback_query.register(take_part_in_week_events, F.data.startswith("manytakep_"))
-

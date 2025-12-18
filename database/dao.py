@@ -1,3 +1,4 @@
+import datetime
 from typing import List, Any, Dict, Sequence
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -157,7 +158,32 @@ class MembersEventDAO(BaseDAO):
         return []
 
 
-    
+    @classmethod
+    async def get_this_week_events(cls, db_session: AsyncSession):
+        today = datetime.datetime.today()
+        week_start = today - datetime.timedelta(days=today.weekday())
+
+        query = select(MemberEvent).filter(
+            MemberEvent.date_time >= week_start,
+            MemberEvent.date_time < week_start + datetime.timedelta(days=7)
+        )
+
+        res = await db_session.execute(query)
+
+        events = res.all()
+
+        return events
+
+
+    @classmethod
+    async def get_events_from_list(cls, db_session: AsyncSession, id_list: list):
+        query = select(MemberEvent).filter(
+            MemberEvent.id.in_(id_list)
+        )
+
+        res = await db_session.execute(query)
+
+        return res.all()
 
 
 

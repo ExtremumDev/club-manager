@@ -16,7 +16,7 @@ def get_verify_inititative_markup(initiative_id) -> InlineKeyboardMarkup:
     )
 
 def get_event_type_markup(prefix: str = ''):
-    return InlineKeyboardMarkup(
+    inline_keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             [
                 InlineKeyboardButton(
@@ -38,6 +38,17 @@ def get_event_type_markup(prefix: str = ''):
             )]
         ]
     )
+
+    if prefix == "af":
+        inline_keyboard.inline_keyboard.extend(
+            [
+                [
+                    InlineKeyboardButton(text="Посмотреть мероприятия на эту неделю", callback_data="weeks_events")
+                ]
+            ]
+        )
+
+    return inline_keyboard
 
 
 def get_events_list_markup(events: list, prefix: str = ''):

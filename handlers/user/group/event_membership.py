@@ -62,7 +62,7 @@ async def user_request_membership(c: types.CallbackQuery, db_session: AsyncSessi
         case EventType.INITIATIVE:
 
             pass
-        case EventType.FRENCH_CLUB | EventType.BUISNESS_MEETS | EventType.WOMEN_MEETS:
+        case EventType.FRENCH_CLUB | EventType.BUISNESS_MEETS | EventType.WOMEN_MEETS | EventType.TABLE_GAMES:
             event = await MembersEventDAO.get_obj(db_session, id=int(event_id))
 
             if event:

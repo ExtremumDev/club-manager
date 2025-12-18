@@ -103,11 +103,14 @@ async def user_request_membership(c: types.CallbackQuery, db_session: AsyncSessi
                             )
 
                         if c.message.chat.type == ChatType.PRIVATE:
-                            await c.bot.edit_message_text(
-                                text=new_message_text,
-                                chat_id=chat_settings.GROUP_ID,
-                                message_id=event.info_message_id
-                            )
+                            try:
+                                await c.bot.edit_message_text(
+                                    text=new_message_text,
+                                    chat_id=chat_settings.GROUP_ID,
+                                    message_id=event.info_message_id
+                                )
+                            except TelegramBadRequest: # if message not found
+                                pass
                         await c.answer(
                             text,
                             show_alert=True

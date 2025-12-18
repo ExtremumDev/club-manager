@@ -44,7 +44,8 @@ async def notice_user_about_seats_left(original_message: types.Message, members_
 
 @connection
 async def user_request_membership(c: types.CallbackQuery, db_session: AsyncSession):
-    a, event_id, event_type = c.data.split('_')
+    c_data = c.data.split('_')
+    event_id, event_type = c_data[1], c_data[2]
     event_type = EventType(int(event_type))
 
     user = await UserDAO.get_obj(db_session, telegram_id=c.from_user.id)
@@ -95,10 +96,11 @@ async def user_request_membership(c: types.CallbackQuery, db_session: AsyncSessi
                             **event.model_to_dict()
                         )
 
-                        await c.message.edit_text(
-                            text=new_message_text,
-                            reply_markup=c.message.reply_markup
-                        )
+                        if len(c_data) <= 3:  # If it was not a button in week's poster
+                            await c.message.edit_text(
+                                text=new_message_text,
+                                reply_markup=c.message.reply_markup
+                            )
 
                         if c.message.chat.type == ChatType.PRIVATE:
                             await c.bot.edit_message_text(
@@ -296,7 +298,6 @@ async def player_came_on_game(c: types.CallbackQuery, db_session: AsyncSession):
 def register_event_membership_handlers(dp: Dispatcher):
     dp.callback_query.register(
         user_request_membership,
-        GroupFilter(),
         F.data.startswith("takepevent_"),
     )
 

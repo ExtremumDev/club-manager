@@ -12,7 +12,7 @@ from database.utils import connection
 from fsm.user.private import CreateInitiativeFSM
 
 from markups.user.events import get_take_part_in_event_markup
-from markups.admin.event_manage import get_verify_inititative_markup
+from markups.admin.event_manage import get_verify_initiative_markup
 
 from text import get_initiative_text
 
@@ -91,7 +91,7 @@ async def create_initiative(m: types.Message, state: FSMContext, db_session, *ar
             m.text.strip(),
             s_data['activity_type']
         ),
-        reply_markup=get_verify_inititative_markup(initiative_id=initiative.id)
+        reply_markup=get_verify_initiative_markup(initiative_id=initiative.id)
     )
 
     await m.answer(

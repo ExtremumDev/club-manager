@@ -67,7 +67,7 @@ async def send_events_for_week(c: types.CallbackQuery, db_session: AsyncSession,
 
         for e in events:
             message_text += e.event_type.get_card_text(**e.model_to_dict())
-            message_text += "\n\n"
+            message_text += "\n"
 
             events_id.append(str(e.id))
 
@@ -84,10 +84,6 @@ async def send_events_for_week(c: types.CallbackQuery, db_session: AsyncSession,
 
         await last_message.edit_reply_markup(
             reply_markup=take_part_in_week_events_markup('_'.join(events_id))
-        )
-
-        await c.message.answer(
-            message_text,
         )
     else:
 

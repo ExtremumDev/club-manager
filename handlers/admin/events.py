@@ -162,7 +162,7 @@ async def create_event(bot, creator_id: int, state_data: dict, db_session: Async
         text=message_text,
         reply_markup=get_take_part_in_event_markup(
             new_event.id,
-            state_data['event_type']
+            state_data['event_type'].value
         )
     )
 

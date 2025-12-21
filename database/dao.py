@@ -156,15 +156,17 @@ class MembersEventDAO(BaseDAO):
                 selectinload(User.memberships).selectinload(EventMembership.event)
             )
             .where(User.telegram_id == user_id)
-        ).filter(
-            MemberEvent.date_time >= datetime.date.today()
         )
     
         result = await db_session.execute(query)
         user = result.scalar_one_or_none()
         
         if user:
-            events = [membership.event for membership in user.memberships]
+            events = [
+                membership.event
+                for membership in user.memberships
+                if membership.event.date_time >= datetime.date.today() and membership.event.event_type == event_type
+            ]
             return events
         return []
 

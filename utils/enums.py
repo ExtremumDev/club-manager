@@ -5,7 +5,7 @@ from text import (
     get_french_club_card_text,
     get_business_meet_card_text,
     get_table_game_card_text,
-    get_women_meets_card_text,
+    get_women_meets_card_text, get_excursion_card_text,
 )
 
 
@@ -15,6 +15,7 @@ class EventType(Enum):
     BUISNESS_MEETS = 2
     WOMEN_MEETS = 3
     INITIATIVE = 4
+    EXCURSIONS = 5
 
 
     def get_card_text(self, **kwargs):
@@ -22,7 +23,8 @@ class EventType(Enum):
             EventType.FRENCH_CLUB: get_french_club_card_text,
             EventType.BUISNESS_MEETS: get_business_meet_card_text,
             EventType.TABLE_GAMES: get_table_game_card_text,
-            EventType.WOMEN_MEETS: get_women_meets_card_text
+            EventType.WOMEN_MEETS: get_women_meets_card_text,
+            EventType.EXCURSIONS: get_excursion_card_text
 
         }
 
@@ -40,6 +42,8 @@ class EventType(Enum):
                 return "☕️ Женские психологические встречи"
             case (EventType.TABLE_GAMES):
                 return "🎲 Настольные игры"
+            case(EventType.EXCURSIONS):
+                return "Экскурсии / Путешествия / Спорт"
 
 
 class Sex(Enum):

@@ -36,6 +36,7 @@ class ChatSettings(BaseModel):
     WOMEN_MEETS_THREAD_ID: int
     FRENCH_CLUB_THREAD_ID: int
     TABLE_GAME_THREAD_ID: int
+    EXCURSIONS_THREAD_ID: int
 
     # admin
 

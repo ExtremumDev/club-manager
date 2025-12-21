@@ -1,5 +1,7 @@
 import datetime
 from typing import List, Any, Dict, Sequence
+
+from sqlalchemy import delete
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import select, asc, update
@@ -40,6 +42,11 @@ class BaseDAO:
             await session.rollback()
             raise e
         return new_instances
+
+    @classmethod
+    async def delete_obj(cls, session: AsyncSession, obj_id):
+        query = delete(cls.model).filter_by(id=obj_id)
+        await session.execute(query)
 
 
 class UserDAO(BaseDAO):
@@ -131,7 +138,9 @@ class MembersEventDAO(BaseDAO):
 
     @classmethod
     async def get_all_events_by_type(cls, db_session: AsyncSession, event_type):
-        query = select(MemberEvent).filter_by(event_type=event_type)
+        query = select(MemberEvent).filter_by(event_type=event_type).filter(
+            MemberEvent.date_time >= datetime.date.today()
+        )
 
         res = await db_session.execute(query)
         return res.scalars().all()
@@ -147,6 +156,8 @@ class MembersEventDAO(BaseDAO):
                 selectinload(User.memberships).selectinload(EventMembership.event)
             )
             .where(User.telegram_id == user_id)
+        ).filter(
+            MemberEvent.date_time >= datetime.date.today()
         )
     
         result = await db_session.execute(query)
@@ -161,11 +172,10 @@ class MembersEventDAO(BaseDAO):
     @classmethod
     async def get_this_week_events(cls, db_session: AsyncSession):
         today = datetime.datetime.today()
-        week_start = today - datetime.timedelta(days=today.weekday())
 
         query = select(MemberEvent).filter(
-            MemberEvent.date_time >= week_start,
-            MemberEvent.date_time < week_start + datetime.timedelta(days=7)
+            MemberEvent.date_time >= today,
+            MemberEvent.date_time <= today + datetime.timedelta(days=(7 - today.weekday()))
         )
 
         res = await db_session.execute(query)

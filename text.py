@@ -74,6 +74,17 @@ def get_table_game_card_text(activity_name, date_time, place, description, membe
 """
 
 
+def get_excursion_card_text(date_time, place, description, members_left, holder, **kwargs):
+    return f"""
+Экскурсии / Путешествия / Спорт
+🗣 Ведущий - {holder}
+📍 {place}
+📅 {date_time.strftime("%d-%m-%Y %H:%M")}  
+👥 Мест осталось: {members_left}
+💬 {description}
+"""
+
+
 def get_account_description(rating: int, user_name: str, reg_date: datetime, interests: str):
     return f"""
 Имя: {user_name}

@@ -61,6 +61,7 @@ def setup_event_notifications(
 
     day_before_datetime = event_date_time - datetime.timedelta(days=1)
     two_hours_before = event_date_time - datetime.timedelta(hours=2)
+    day_after = event_date_time + datetime.timedelta(days=1)
 
     scheduler.add_job(
         func=send_event_notification,
@@ -92,6 +93,18 @@ def setup_event_notifications(
             'event_id': event_id,
             'message': two_hours_before_text,
         }
+    )
+
+    scheduler.add_job(
+        func=events_happened,
+        trigger=CronTrigger(
+            year=day_after.year,
+            month=day_after.month,
+            day=day_after.day,
+            hour=day_after.hour,
+            minute=day_after.minute,
+            second=day_after.second
+        )
     )
 
 @connection
@@ -155,6 +168,11 @@ async def send_random_user(db_session, *args):
                 continue
 
         await asyncio.sleep(0.5)
+
+
+@connection
+async def events_happened(event_id, db_session: AsyncSession, *args):
+    await MembersEventDAO.delete_obj(db_session, event_id)
 
 
 @connection

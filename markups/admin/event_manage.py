@@ -35,6 +35,10 @@ def get_event_type_markup(prefix: str = ''):
             [InlineKeyboardButton(
                 text=" 🎲 Настольные игры",
                 callback_data=f"{prefix}eventtype_1"
+            )],
+            [InlineKeyboardButton(
+                text=" Экскурсии / Путешествия / Спорт",
+                callback_data=f"{prefix}eventtype_5"
             )]
         ]
     )

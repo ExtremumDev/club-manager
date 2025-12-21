@@ -153,6 +153,8 @@ async def create_event(bot, creator_id: int, state_data: dict, db_session: Async
             thread_id = chat_settings.FRENCH_CLUB_THREAD_ID
         case (EventType.TABLE_GAMES):
             thread_id = chat_settings.TABLE_GAME_THREAD_ID
+        case (EventType.EXCURSIONS):
+            thread_id = chat_settings.EXCURSIONS_THREAD_ID
 
     message = await bot.send_message(
         chat_id=chat_settings.GROUP_ID,

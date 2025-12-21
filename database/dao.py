@@ -165,7 +165,7 @@ class MembersEventDAO(BaseDAO):
             events = [
                 membership.event
                 for membership in user.memberships
-                if membership.event.date_time >= datetime.date.today() and membership.event.event_type == event_type
+                if membership.event.date_time.date() >= datetime.date.today() and membership.event.event_type == event_type
             ]
             return events
         return []

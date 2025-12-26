@@ -201,7 +201,7 @@ def register_user_start_handlers(dp: Dispatcher):
 
     dp.message.register(ask_interests, StateFilter(RegistrationFSM.name_state))
     dp.message.register(ask_goal, StateFilter(RegistrationFSM.interests_state))
-    dp.callback_query.register(ask_sex, F.data.startswith("funrate_"), StateFilter(RegistrationFSM.interests_state))
+    dp.callback_query.register(ask_sex, F.data.startswith("funrate_"), StateFilter(RegistrationFSM.goal_state))
     dp.callback_query.register(ask_social_link, StateFilter(RegistrationFSM.sex_state))
     dp.message.register(get_social_link, StateFilter(RegistrationFSM.social_link_state))
     dp.callback_query.register(
